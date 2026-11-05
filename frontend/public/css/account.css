@@ -1,0 +1,487 @@
+.account-page {
+  min-height: 100vh;
+  background: #f8f7f3;
+}
+.account-header {
+  max-width: 1140px;
+}
+.account-home {
+  color: #247451;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+.account-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 52px 24px 90px;
+}
+.account-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 25px;
+}
+.account-heading h1 {
+  font-size: 34px;
+  margin: 9px 0 5px;
+}
+.account-heading p,
+.account-card-title p {
+  font-size: 13px;
+  color: #78837d;
+  margin: 0;
+}
+.account-badge {
+  background: #fff2c9;
+  color: #8b6710;
+  padding: 11px 15px;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.account-layout {
+  display: grid;
+  grid-template-columns: minmax(290px, 0.8fr) minmax(0, 1.5fr);
+  gap: 18px;
+  align-items: start;
+}
+.account-card {
+  background: #fff;
+  border: 1px solid #eceee9;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 10px 30px #23332908;
+}
+.account-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 21px;
+}
+.account-card-title h2 {
+  font-size: 18px;
+  margin: 0 0 5px;
+}
+.profile-icon,
+.orders-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 14px;
+  background: #eaf5ef;
+  color: #16815f;
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+}
+.orders-icon {
+  background: #fff1e9;
+  color: #f46a3b;
+}
+.account-card-title > div {
+  flex: 1;
+}
+.profile-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 13px;
+}
+.profile-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #59665f;
+}
+.profile-form input,
+.profile-form textarea {
+  width: 100%;
+  border: 1px solid #e6eae5;
+  border-radius: 9px;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 13px;
+  color: #1d2924;
+  background: #fff;
+}
+.profile-form input:disabled {
+  background: #f6f7f5;
+  color: #849087;
+}
+.profile-form textarea {
+  resize: vertical;
+}
+.profile-form .primary-button {
+  margin: 3px 0 0;
+  width: 100%;
+}
+.refresh-orders {
+  border: 1px solid #e7ede8;
+  border-radius: 9px;
+  background: #fff;
+  color: #16815f;
+  font-size: 22px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+.customer-orders {
+  display: grid;
+  gap: 12px;
+}
+.orders-loading,
+.orders-empty {
+  padding: 32px 18px;
+  text-align: center;
+  border: 1px dashed #e6ebe6;
+  border-radius: 12px;
+  color: #86928a;
+  font-size: 13px;
+}
+.orders-empty span {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+.order-card {
+  border: 1px solid #e9ede8;
+  border-radius: 13px;
+  overflow: hidden;
+}
+.order-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  background: #fafbf9;
+}
+.order-number {
+  font-weight: 800;
+  font-size: 13px;
+}
+.order-date {
+  display: block;
+  font-size: 10px;
+  color: #87918a;
+  margin-top: 4px;
+}
+.order-status {
+  padding: 7px 10px;
+  border-radius: 20px;
+  background: #eef3ef;
+  color: #637168;
+  font-weight: 700;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.order-status[data-status="COMPLETED"] {
+  background: #e7f6ec;
+  color: #16815f;
+}
+.order-status[data-status="CANCELLED"],
+.order-status[data-status="FAILED"] {
+  background: #fff0ed;
+  color: #ce5142;
+}
+.order-items {
+  padding: 12px 16px;
+  display: grid;
+  gap: 8px;
+}
+.order-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: #57645c;
+}
+.order-card-foot {
+  padding: 12px 16px;
+  border-top: 1px solid #eef0ed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #768078;
+}
+.order-total {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ef663a;
+}
+.order-delivery {
+  padding: 0 16px 12px;
+  color: #8a948d;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.account-toast {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, 120px);
+  opacity: 0;
+  pointer-events: none;
+  background: #183329;
+  color: #fff;
+  border-radius: 22px;
+  padding: 12px 20px;
+  font-size: 13px;
+  transition: 0.25s;
+  z-index: 9;
+}
+.account-page #accountToast {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, 120px);
+  opacity: 0;
+  background: #183329;
+  color: #fff;
+  border-radius: 22px;
+  padding: 12px 20px;
+  font-size: 13px;
+  transition: 0.25s;
+  z-index: 9;
+}
+.account-page #accountToast.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+@media (max-width: 800px) {
+  .account-layout {
+    grid-template-columns: 1fr;
+  }
+  .account-shell {
+    padding: 34px 16px 60px;
+  }
+  .account-heading {
+    align-items: start;
+    gap: 15px;
+    flex-direction: column;
+  }
+  .account-heading h1 {
+    font-size: 29px;
+  }
+}
+@media (max-width: 480px) {
+  .account-card {
+    padding: 18px;
+  }
+  .order-card-head {
+    align-items: start;
+    flex-direction: column;
+    gap: 7px;
+  }
+}
+.orders-card {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+.wallet-icon,
+.favorite-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 14px;
+  background: #fff4dd;
+  color: #bd8615;
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+  font-weight: 800;
+}
+.favorite-icon {
+  background: #fff0ed;
+  color: #e75d4d;
+}
+.wallet-balance {
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: #f2f8f3;
+  margin-bottom: 17px;
+}
+.wallet-balance small,
+.wallet-balance strong {
+  display: block;
+}
+.wallet-balance small {
+  font-size: 11px;
+  color: #78837d;
+}
+.wallet-balance strong {
+  font-size: 25px;
+  color: #16815f;
+  margin-top: 5px;
+}
+.wallet-form {
+  display: grid;
+  gap: 8px;
+}
+.wallet-form > label {
+  font-size: 12px;
+  font-weight: 700;
+}
+.wallet-form > div {
+  display: flex;
+  gap: 8px;
+}
+.wallet-form input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid #e6eae5;
+  border-radius: 9px;
+  padding: 10px 12px;
+  font: inherit;
+}
+.wallet-form .primary-button {
+  margin: 0;
+  white-space: nowrap;
+  padding: 11px 14px;
+  font-size: 12px;
+}
+.wallet-form > small {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #87918a;
+}
+.wallet-history-title {
+  font-size: 13px;
+  margin: 20px 0 9px;
+}
+.wallet-history {
+  display: grid;
+  gap: 7px;
+}
+.wallet-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid #eef0ed;
+  font-size: 11px;
+}
+.wallet-row small {
+  display: block;
+  color: #87918a;
+  margin-top: 3px;
+}
+.wallet-row strong {
+  color: #16815f;
+}
+.wallet-row[data-status="FAILED"] strong {
+  color: #cc5548;
+}
+.wallet-row[data-status="SPENT"] strong {
+  color: #cc5548;
+}
+.favorite-card {
+  margin-top: 18px;
+}
+.favorite-products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.favorite-product {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #e9ede8;
+  border-radius: 12px;
+  padding: 10px;
+}
+.favorite-product img {
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 9px;
+}
+.favorite-product b,
+.favorite-product small {
+  display: block;
+}
+.favorite-product b {
+  font-size: 12px;
+}
+.favorite-product small {
+  font-size: 11px;
+  color: #ef663a;
+  margin-top: 4px;
+}
+.favorite-product button {
+  border: 0;
+  background: #fff0ed;
+  color: #d45648;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.favorite-product-actions {
+  display: grid;
+  gap: 6px;
+}
+.favorite-product .favorite-order-button {
+  background: #16815f;
+  color: #fff;
+}
+.favorite-product button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+.favorite-products .orders-empty {
+  grid-column: 1/-1;
+}
+.order-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  color: #78837d;
+  font-size: 12px;
+}
+.order-pagination[hidden] {
+  display: none;
+}
+.order-pagination button {
+  border: 1px solid #e7ede8;
+  border-radius: 9px;
+  padding: 9px 12px;
+  background: #fff;
+  color: #16815f;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.order-pagination button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+@media (max-width: 800px) {
+  .orders-card {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .favorite-products {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .wallet-form > div {
+    flex-direction: column;
+  }
+  .wallet-form .primary-button {
+    width: 100%;
+  }
+  .favorite-product {
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+  }
+  .favorite-product img {
+    width: 52px;
+    height: 52px;
+  }
+}

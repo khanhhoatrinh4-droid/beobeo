@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quản trị — beobeo</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/components.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-header">
+      <a class="brand" href="/"><span>b</span> beobeo</a>
+      <div>
+        <span class="admin-live"><i></i> Hệ thống quản lý</span
+        ><a class="admin-home" href="/">← Về cửa hàng</a>
+      </div>
+    </header>
+    <main class="admin-shell">
+      <div class="admin-welcome">
+        <div>
+          <span class="eyebrow coral">beobeo CONTROL CENTER</span>
+          <h1>Xin chào, quản lý 👋</h1>
+          <p>Theo dõi cửa hàng và cập nhật hoạt động hôm nay.</p>
+        </div>
+        <span class="admin-date" id="adminDate"></span>
+      </div>
+      <div class="stat-grid">
+        <article class="stat-card">
+          <span>🍔</span><small>Sản phẩm</small
+          ><strong id="statProducts">—</strong><em>Trong thực đơn</em>
+        </article>
+        <article class="stat-card">
+          <span>🧾</span><small>Đơn hàng</small
+          ><strong id="statOrders">—</strong><em>Tổng đơn đã nhận</em>
+        </article>
+        <article class="stat-card">
+          <span>👥</span><small>Người dùng</small
+          ><strong id="statUsers">—</strong><em>Tài khoản khách hàng</em>
+        </article>
+        <article class="stat-card warm">
+          <span>✨</span><small>Điều hành</small><strong>beobeo</strong
+          ><em>Đồ ăn ngon, giao tận nơi</em>
+        </article>
+      </div>
+      <section class="admin-panel">
+        <div class="admin-tabs" role="tablist">
+          <button class="admin-tab active" data-tab="products">
+            🍔 Sản phẩm</button
+          ><button class="admin-tab" data-tab="categories">🗂️ Danh mục</button
+          ><button class="admin-tab" data-tab="posts">📰 Bài viết</button
+          ><button class="admin-tab" data-tab="orders">🧾 Đơn hàng</button
+          ><button class="admin-tab" data-tab="users">👥 Người dùng</button>
+        </div>
+        <div class="admin-toolbar">
+          <div>
+            <h2 id="adminTitle">Quản lý sản phẩm</h2>
+            <p id="adminHint">Thêm món mới hoặc cập nhật thực đơn beobeo.</p>
+          </div>
+          <button id="newRecord" class="primary-button">
+            ＋ Thêm sản phẩm
+          </button>
+        </div>
+        <div class="admin-filters">
+          <label class="search-field"
+            ><span>⌕</span
+            ><input
+              id="adminSearch"
+              type="search"
+              placeholder="Tìm trong danh sách..." /></label
+          ><select id="adminFilter" aria-label="Lọc dữ liệu">
+            <option value="">Tất cả</option>
+          </select>
+        </div>
+        <div class="admin-table-wrap">
+          <table>
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody">
+              <tr>
+                <td>Đang tải dữ liệu...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <dialog id="productFormDialog" class="admin-dialog">
+      <button class="dialog-close" type="button" data-admin-close="product">
+        ×
+      </button>
+      <form id="productForm" class="checkout-form">
+        <span class="eyebrow coral">MENU MANAGEMENT</span>
+        <h2 id="productFormTitle">Thêm sản phẩm</h2>
+        <input type="hidden" name="id" /><label
+          >Tên sản phẩm<input required name="name" maxlength="150" /></label
+        ><label>Mô tả<textarea name="description" rows="2"></textarea></label>
+        <div class="form-row">
+          <label
+            >Giá bán (₫)<input
+              required
+              type="number"
+              min="0"
+              name="price" /></label
+          ><label
+            >Giá gốc (₫)<input type="number" min="0" name="originalPrice"
+          /></label>
+        </div>
+        <div class="form-row">
+          <label
+            >Giảm giá (%)<input
+              type="number"
+              min="0"
+              max="100"
+              name="discountPercent" /></label
+          ><label
+            >Thời gian chế biến (phút)<input
+              type="number"
+              min="1"
+              name="preparationMinutes"
+          /></label>
+        </div>
+        <div class="form-row">
+          <label
+            >Năng lượng (kcal)<input
+              type="number"
+              min="0"
+              name="calories" /></label
+          ><label
+            >Danh mục<select name="categoryId" id="productCategory">
+              <option value="">Chưa phân loại</option>
+            </select></label
+          >
+        </div>
+        <label
+          >Nguyên liệu<input
+            name="ingredients"
+            maxlength="1000"
+            placeholder="Bò, cheddar, xà lách" /></label
+        ><label>URL hình ảnh<input name="imageUrl" maxlength="500" /></label>
+        <div class="form-row checks">
+          <label><input type="checkbox" name="featured" /> Món nổi bật</label
+          ><label><input type="checkbox" name="comboProduct" /> Combo</label
+          ><label
+            ><input type="checkbox" name="active" checked /> Đang bán</label
+          >
+        </div>
+        <button class="primary-button" type="submit">Lưu sản phẩm</button>
+      </form>
+    </dialog>
+    <dialog id="categoryFormDialog" class="admin-dialog">
+      <button class="dialog-close" type="button" data-admin-close="category">
+        ×
+      </button>
+      <form id="categoryForm" class="checkout-form">
+        <span class="eyebrow green">CATEGORY MANAGEMENT</span>
+        <h2 id="categoryFormTitle">Thêm danh mục</h2>
+        <input type="hidden" name="id" /><label
+          >Tên danh mục<input required name="name" maxlength="100" /></label
+        ><label
+          >Mô tả<textarea
+            name="description"
+            rows="3"
+            maxlength="255"
+          ></textarea></label
+        ><label class="check-line"
+          ><input type="checkbox" name="active" checked /> Đang hiển thị</label
+        ><button class="primary-button">Lưu danh mục</button>
+      </form>
+    </dialog>
+    <dialog id="postFormDialog" class="admin-dialog">
+      <button class="dialog-close" type="button" data-admin-close="post">
+        ×
+      </button>
+      <form id="postForm" class="checkout-form">
+        <span class="eyebrow yellow">STORY MANAGEMENT</span>
+        <h2 id="postFormTitle">Thêm bài viết</h2>
+        <input type="hidden" name="id" /><label
+          >Tiêu đề<input required name="title" maxlength="180" /></label
+        ><label
+          >Đường dẫn (slug)<input
+            name="slug"
+            maxlength="200"
+            placeholder="Tự tạo từ tiêu đề nếu để trống" /></label
+        ><label
+          >Mô tả ngắn<textarea
+            name="excerpt"
+            rows="2"
+            maxlength="500"
+          ></textarea></label
+        ><label>Nội dung<textarea name="content" rows="7"></textarea></label
+        ><label>URL hình ảnh<input name="imageUrl" maxlength="500" /></label
+        ><label class="check-line"
+          ><input type="checkbox" name="active" checked /> Xuất bản</label
+        ><button class="primary-button">Lưu bài viết</button>
+      </form>
+    </dialog>
+    <div id="toast"></div>
+    <script th:src="@{/js/admin/admin.js}" defer></script>
+  </body>
+</html>

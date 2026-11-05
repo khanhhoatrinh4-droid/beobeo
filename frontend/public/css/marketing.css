@@ -1,0 +1,457 @@
+/* Promotion banner, newest dishes and combo highlights */
+.promo-banner {
+  max-width: 1144px;
+  min-height: 250px;
+  margin: 38px auto 0;
+  padding: 34px 44px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  border-radius: 24px;
+  background: linear-gradient(112deg, #19362b 0%, #245c43 58%, #36845e 100%);
+  color: #fff;
+  box-shadow: 0 18px 38px #1d29241c;
+}
+.promo-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 540px;
+}
+.promo-kicker {
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: #ffd36a;
+}
+.promo-copy h2 {
+  font-family: inherit;
+  font-size: clamp(29px, 4vw, 43px);
+  line-height: 1.1;
+  margin: 12px 0;
+}
+.promo-copy p {
+  color: #d8e8dc;
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+.promo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 17px;
+  border-radius: 9px;
+  background: #f46a3b;
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px #1113;
+}
+.promo-cta span {
+  font-size: 18px;
+  line-height: 12px;
+}
+.promo-art {
+  position: absolute;
+  right: 150px;
+  top: 50%;
+  width: 310px;
+  height: 250px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff12;
+}
+.promo-art span {
+  font-size: 112px;
+  filter: drop-shadow(0 18px 9px #10241b66);
+  transform: rotate(-12deg);
+  animation: promo-bob 4s ease-in-out infinite;
+}
+.promo-art i,
+.promo-art b,
+.promo-art em {
+  position: absolute;
+  font-style: normal;
+  font-size: 35px;
+  animation: promo-bob 3s ease-in-out infinite;
+}
+.promo-art i {
+  right: 14px;
+  top: 31px;
+}
+.promo-art b {
+  left: 4px;
+  bottom: 27px;
+  font-size: 46px;
+}
+.promo-art em {
+  right: 9px;
+  bottom: 24px;
+  font-size: 39px;
+  animation-delay: 0.5s;
+}
+.promo-stamp {
+  position: relative;
+  z-index: 1;
+  width: 104px;
+  height: 104px;
+  flex: 0 0 104px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #ffd36a;
+  color: #183329;
+  box-shadow: 0 10px 28px #11271d44;
+  transform: rotate(8deg);
+}
+.promo-stamp strong {
+  font-size: 25px;
+  font-weight: 700;
+}
+.promo-stamp span {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.new-products-section {
+  scroll-margin-top: 20px;
+}
+.new-products-section .card:first-child {
+  border-color: #cce9d7;
+}
+.new-products-section .heading h2:after {
+  content: " ✨";
+  font-family: inherit;
+  font-size: 21px;
+}
+.section#combos .heading {
+  padding: 0 0 12px;
+  border-bottom: 1px solid #eee7db;
+}
+.section#combos .heading h2 {
+  color: #1c3229;
+}
+.section#combos .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: 20px;
+  background: #fff1c8;
+  color: #946500;
+}
+@keyframes promo-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -9px;
+  }
+}
+.campaign-carousel {
+  max-width: 1144px;
+  height: 265px;
+  margin: 38px auto 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 18px 38px #1d29241c;
+  background: #19362b;
+}
+.campaign-slide {
+  position: absolute;
+  inset: 0;
+  padding: 34px 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  overflow: hidden;
+  color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s;
+}
+.campaign-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+.campaign-slide--daily {
+  background: linear-gradient(112deg, #19362b 0%, #245c43 58%, #36845e 100%);
+}
+.campaign-slide--halloween {
+  background:
+    radial-gradient(ellipse at 78% 45%, #763c37 0%, transparent 35%),
+    linear-gradient(112deg, #211735 0%, #40213f 55%, #813a27 100%);
+}
+.campaign-slide--friends {
+  background:
+    radial-gradient(ellipse at 75% 50%, #405943 0%, transparent 38%),
+    linear-gradient(112deg, #192d2d 0%, #263f3b 58%, #51402e 100%);
+}
+.campaign-slide--sale1111 {
+  background:
+    radial-gradient(ellipse at 75% 50%, #685016 0%, transparent 38%),
+    linear-gradient(112deg, #2d1938 0%, #57304b 58%, #9a4a28 100%);
+}
+.campaign-slide .promo-copy,
+.campaign-slide .halloween-copy {
+  max-width: 570px;
+}
+.campaign-slide .promo-copy h2,
+.campaign-slide .halloween-copy h2 {
+  font-size: clamp(29px, 4vw, 43px);
+  line-height: 1.08;
+  margin: 12px 0;
+}
+.campaign-slide .halloween-copy h2 em {
+  color: #ff9a44;
+  font-style: normal;
+}
+.campaign-slide--friends .halloween-copy h2 em,
+.campaign-slide--friends .halloween-kicker {
+  color: #ffd478;
+}
+.campaign-slide--friends .halloween-cta {
+  background: #ffd478;
+}
+.campaign-slide .halloween-copy p {
+  max-width: 450px;
+  color: #eedee5;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+.campaign-slide .halloween-kicker {
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: #ffc45e;
+}
+.campaign-slide .halloween-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 17px;
+  border-radius: 9px;
+  background: #ff8738;
+  color: #2c1731;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px #1114;
+}
+.campaign-slide .halloween-cta span {
+  font-size: 18px;
+  line-height: 12px;
+}
+.campaign-slide .halloween-art {
+  position: absolute;
+  right: 145px;
+  top: 50%;
+  width: 310px;
+  height: 250px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff1e00d;
+}
+.campaign-slide .halloween-art span {
+  font-size: 112px;
+  filter: drop-shadow(0 18px 9px #0a061a88);
+  animation: promo-bob 4s ease-in-out infinite;
+}
+.campaign-slide .halloween-art i,
+.campaign-slide .halloween-art b,
+.campaign-slide .halloween-art em {
+  position: absolute;
+  font-style: normal;
+  font-size: 38px;
+  animation: promo-bob 3s ease-in-out infinite;
+}
+.campaign-slide .halloween-art i {
+  right: 14px;
+  top: 25px;
+}
+.campaign-slide .halloween-art b {
+  left: 4px;
+  bottom: 25px;
+  font-size: 46px;
+}
+.campaign-slide .halloween-art em {
+  right: 9px;
+  bottom: 20px;
+  font-size: 35px;
+  animation-delay: 0.5s;
+}
+.campaign-slide .halloween-stamp {
+  position: relative;
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+  flex: 0 0 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #ffc45e;
+  color: #361b34;
+  box-shadow: 0 10px 28px #10091f66;
+  transform: rotate(8deg);
+}
+.campaign-slide .halloween-stamp strong {
+  font-size: 22px;
+  font-weight: 800;
+}
+.campaign-slide .halloween-stamp span {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.campaign-dots {
+  position: absolute;
+  z-index: 3;
+  bottom: 15px;
+  left: 50%;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+.campaign-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid #fff;
+  background: #ffffff55;
+  border-radius: 99px;
+  cursor: pointer;
+  transition:
+    width 0.25s,
+    background 0.25s;
+}
+.campaign-dots button.is-active {
+  width: 25px;
+  background: #fff;
+}
+@media (max-width: 760px) {
+  .promo-banner {
+    margin: 25px 18px 0;
+    padding: 25px 22px;
+    min-height: 225px;
+    align-items: flex-start;
+  }
+  .promo-copy {
+    max-width: 75%;
+  }
+  .promo-copy h2 {
+    font-size: 29px;
+  }
+  .promo-copy p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .promo-art {
+    right: -75px;
+    top: auto;
+    bottom: -76px;
+    transform: none;
+    width: 220px;
+    height: 220px;
+    opacity: 0.55;
+  }
+  .promo-art span {
+    font-size: 87px;
+  }
+  .promo-stamp {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 67px;
+    height: 67px;
+    min-width: 67px;
+  }
+  .promo-stamp strong {
+    font-size: 18px;
+  }
+  .promo-stamp span {
+    font-size: 7px;
+  }
+  .promo-cta {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 760px) {
+  .campaign-carousel {
+    height: 250px;
+    margin: 25px 18px 0;
+  }
+  .campaign-slide {
+    padding: 25px 22px 42px;
+    align-items: flex-start;
+  }
+  .campaign-slide .promo-copy,
+  .campaign-slide .halloween-copy {
+    max-width: 78%;
+  }
+  .campaign-slide .promo-copy h2,
+  .campaign-slide .halloween-copy h2 {
+    font-size: 27px;
+  }
+  .campaign-slide .promo-copy p,
+  .campaign-slide .halloween-copy p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .campaign-slide .promo-art,
+  .campaign-slide .halloween-art {
+    right: -75px;
+    top: auto;
+    bottom: -76px;
+    transform: none;
+    width: 220px;
+    height: 220px;
+    opacity: 0.55;
+  }
+  .campaign-slide .promo-art span,
+  .campaign-slide .halloween-art span {
+    font-size: 87px;
+  }
+  .campaign-slide .promo-stamp,
+  .campaign-slide .halloween-stamp {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 65px;
+    height: 65px;
+    min-width: 65px;
+  }
+  .campaign-slide .promo-stamp strong,
+  .campaign-slide .halloween-stamp strong {
+    font-size: 16px;
+  }
+  .campaign-slide .promo-stamp span,
+  .campaign-slide .halloween-stamp span {
+    font-size: 7px;
+  }
+  .campaign-slide .promo-cta,
+  .campaign-slide .halloween-cta {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+}

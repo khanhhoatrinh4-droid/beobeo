@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480">
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#dceafa"/><stop offset="1" stop-color="#f6f9ff"/></linearGradient>
+    <linearGradient id="can" x2="1"><stop stop-color="#092a71"/><stop offset=".5" stop-color="#1264bd"/><stop offset="1" stop-color="#07306f"/></linearGradient>
+  </defs>
+  <rect width="640" height="480" fill="url(#bg)"/>
+  <circle cx="510" cy="100" r="68" fill="#fff" opacity=".65"/>
+  <ellipse cx="325" cy="394" rx="154" ry="28" fill="#183354" opacity=".13"/>
+  <g transform="rotate(-8 320 240)">
+    <rect x="205" y="75" width="230" height="325" rx="38" fill="url(#can)"/>
+    <path d="M221 111h198M221 369h198" stroke="#b9d3ed" stroke-width="8" opacity=".75"/>
+    <ellipse cx="320" cy="235" rx="78" ry="69" fill="#fff"/>
+    <path d="M246 228c20-31 76-52 126-20 12 8 22 19 29 32-31 18-73 21-111 8-19-6-34-13-44-20Z" fill="#e53843"/>
+    <path d="M246 237c31 16 67 28 111 16 18-5 33-13 44-23-10 50-45 76-84 76-38 0-66-24-71-69Z" fill="#1769bd"/>
+    <text x="320" y="337" fill="white" font-family="Arial,sans-serif" font-size="29" font-weight="700" text-anchor="middle">PEPSI</text>
+    <path d="M228 82q92-16 184 0" fill="none" stroke="#dce8f3" stroke-width="6"/>
+  </g>
+  <circle cx="114" cy="138" r="6" fill="#fff"/><circle cx="520" cy="310" r="10" fill="#fff"/><circle cx="488" cy="350" r="5" fill="#fff"/>
+</svg>

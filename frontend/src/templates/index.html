@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>beobeo — Đồ ăn nhanh ngon mỗi ngày</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/store.css}" />
+    <link rel="stylesheet" th:href="@{/css/components.css}" />
+    <link rel="stylesheet" th:href="@{/css/marketing.css}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}" />
+  </head>
+
+  <body th:attr="data-authenticated=${currentUser != null}">
+    <header class="site-header">
+      <a class="brand" href="#top"> <span>b</span> beobeo </a>
+
+      <nav>
+        <a href="#menu">Thực đơn</a>
+        <a href="#new-products">Món mới</a>
+        <a href="#combos">Combo</a>
+        <a href="#sale">Ưu đãi</a>
+        <a href="#locations">Cửa hàng</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="guest-actions" th:if="${currentUser == null}">
+          <a class="account-link login-link" href="/login">Đăng nhập</a>
+          <a class="account-register" href="/register"
+            >Tạo tài khoản <span>→</span></a
+          >
+        </div>
+        <a
+          class="account-link"
+          th:if="${currentUser != null and currentUser.role == 'ADMIN'}"
+          href="/admin"
+          >Quản trị</a
+        >
+        <div
+          class="member-menu"
+          th:if="${currentUser != null and currentUser.role == 'CUSTOMER'}"
+        >
+          <a class="member-account" href="/account"
+            ><span
+              class="member-avatar"
+              th:text="${#strings.substring(currentUser.fullName, 0, 1)}"
+              >B</span
+            ><span
+              ><small>Xin chào</small
+              ><b th:text="${currentUser.fullName}">Thành viên</b></span
+            ><i>⌄</i></a
+          >
+          <form method="post" th:action="@{/logout}">
+            <button class="member-logout" type="submit">Đăng xuất</button>
+          </form>
+        </div>
+        <div
+          class="member-menu admin-menu"
+          th:if="${currentUser != null and currentUser.role == 'ADMIN'}"
+        >
+          <span class="account-name" th:text="${currentUser.fullName}"
+            >Quản trị viên</span
+          >
+          <form method="post" th:action="@{/logout}">
+            <button class="member-logout" type="submit">Đăng xuất</button>
+          </form>
+        </div>
+        <button class="cart-button" id="cartButton" type="button">
+          Giỏ hàng <b id="cartCount">0</b>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <span class="eyebrow"> 🔥 GIAO NHANH TRONG 30 PHÚT </span>
+
+          <h1>
+            Ngon giòn từng miếng,<br />
+            <em>vui trọn từng khoảnh khắc.</em>
+          </h1>
+
+          <p>
+            Đồ ăn nhanh làm mới mỗi ngày, nguyên liệu chọn lọc và luôn nóng hổi
+            khi đến tay bạn.
+          </p>
+
+          <a class="primary-button" href="#menu"> Khám phá thực đơn → </a>
+        </div>
+
+        <div class="hero-image">
+          <img th:src="@{/images/hero-burger.jpg}" alt="Burger bò phô mai" />
+        </div>
+      </section>
+
+      <section class="benefits">
+        <div>
+          ⚡
+          <span>
+            <b>Giao nhanh</b>
+            30 phút tận nơi
+          </span>
+        </div>
+
+        <div>
+          🌿
+          <span>
+            <b>Nguyên liệu tươi</b>
+            Chế biến trong ngày
+          </span>
+        </div>
+
+        <div>
+          🎁
+          <span>
+            <b>Ưu đãi mỗi ngày</b>
+            Tiết kiệm thật đã
+          </span>
+        </div>
+      </section>
+
+      <section
+        class="campaign-carousel"
+        aria-label="Chương trình và ưu đãi beobeo"
+        aria-roledescription="carousel"
+      >
+        <article
+          class="campaign-slide campaign-slide--daily is-active"
+          aria-hidden="false"
+        >
+          <div class="promo-copy">
+            <span class="promo-kicker">🎉 NGON MỖI NGÀY · ƯU ĐÃI MỖI NGÀY</span>
+            <h2 id="promoHeadline">Món ngon, giá thật vui!</h2>
+            <p id="promoSubline">
+              Khám phá món mới, combo hấp dẫn và ưu đãi tại beobeo.
+            </p>
+            <a class="promo-cta" href="#sale">Xem ưu đãi ngay <span>→</span></a>
+          </div>
+          <div class="promo-art" aria-hidden="true">
+            <span>🍔</span><i>✨</i><b>🍟</b><em>🥤</em>
+          </div>
+          <div class="promo-stamp">
+            <strong id="promoDiscount">HOT</strong><span>ưu đãi hôm nay</span>
+          </div>
+        </article>
+        <article
+          class="campaign-slide campaign-slide--halloween"
+          aria-hidden="true"
+        >
+          <div class="halloween-copy">
+            <span class="halloween-kicker"
+              >🎃 HALLOWEEN RÙNG RỢN · DEAL CỰC GIÒN</span
+            >
+            <h2>Tiệc ma vui vẻ,<br /><em>ăn ngon hết sẩy!</em></h2>
+            <p>
+              Rủ hội bạn săn combo Halloween giới hạn — ngon vui, giá hết hồn.
+            </p>
+            <a href="#combos" class="halloween-cta"
+              >Săn combo Halloween <span>→</span></a
+            >
+          </div>
+          <div class="halloween-art" aria-hidden="true">
+            <span>🎃</span><i>👻</i><b>🍗</b><em>🦇</em>
+          </div>
+          <div class="halloween-stamp">
+            <strong>BOO!</strong><span>mùa lễ hội</span>
+          </div>
+        </article>
+        <article
+          class="campaign-slide campaign-slide--friends"
+          aria-hidden="true"
+        >
+          <div class="halloween-copy">
+            <span class="halloween-kicker">👻 RỦ BẠN BÈ · QUÀ VUI BẤT NGỜ</span>
+            <h2>Hội bạn càng đông,<br /><em>Halloween càng vui!</em></h2>
+            <p>
+              Chọn combo nhóm, chia sẻ món ngon và tận hưởng đêm hội thật đáng
+              nhớ.
+            </p>
+            <a href="#combos" class="halloween-cta"
+              >Chọn món cho cả hội <span>→</span></a
+            >
+          </div>
+          <div class="halloween-art" aria-hidden="true">
+            <span>🍔</span><i>🕸️</i><b>🍟</b><em>🧡</em>
+          </div>
+          <div class="halloween-stamp">
+            <strong>TRICK</strong><span>or treat?</span>
+          </div>
+        </article>
+        <article
+          class="campaign-slide campaign-slide--sale1111"
+          aria-hidden="true"
+        >
+          <div class="halloween-copy">
+            <span class="halloween-kicker">🛍️ 11.11 · NGÀY HỘI SĂN DEAL</span>
+            <h2>11/11 săn deal,<br /><em>ăn ngon giá mê!</em></h2>
+            <p>
+              Chương trình ưu đãi 11/11 sắp diễn ra — theo dõi beobeo để không
+              bỏ lỡ deal hấp dẫn.
+            </p>
+            <a href="#stories" class="halloween-cta"
+              >Xem tin chương trình <span>→</span></a
+            >
+          </div>
+          <div class="halloween-art" aria-hidden="true">
+            <span>🛍️</span><i>✨</i><b>🍔</b><em>🏷️</em>
+          </div>
+          <div class="halloween-stamp">
+            <strong>11.11</strong><span>sắp diễn ra</span>
+          </div>
+        </article>
+        <div
+          class="campaign-dots"
+          role="group"
+          aria-label="Chọn banner chương trình"
+        >
+          <button
+            type="button"
+            class="is-active"
+            aria-label="Banner ưu đãi mỗi ngày"
+            aria-current="true"
+          ></button
+          ><button
+            type="button"
+            aria-label="Banner Halloween"
+            aria-current="false"
+          ></button
+          ><button
+            type="button"
+            aria-label="Banner hội bạn Halloween"
+            aria-current="false"
+          ></button
+          ><button
+            type="button"
+            aria-label="Banner ưu đãi 11/11"
+            aria-current="false"
+          ></button>
+        </div>
+      </section>
+
+      <section class="section product-search-section" id="find-food">
+        <div class="heading">
+          <div>
+            <span class="eyebrow coral">TÌM MÓN BẠN THÍCH</span>
+            <h2>Khám phá toàn bộ thực đơn</h2>
+          </div>
+        </div>
+        <div class="search-controls">
+          <label class="search-field"
+            ><span>⌕</span
+            ><input
+              id="productSearch"
+              type="search"
+              placeholder="Tìm burger, gà rán, khoai tây..."
+              autocomplete="off" /></label
+          ><select id="categoryFilter" aria-label="Lọc theo danh mục">
+            <option value="">Tất cả danh mục</option>
+          </select>
+        </div>
+        <div
+          id="searchResultLabel"
+          class="search-result-label"
+          aria-live="polite"
+        ></div>
+        <div id="searchGrid" class="products search-grid" hidden></div>
+      </section>
+
+      <section class="section" id="sale">
+        <div class="heading">
+          <div>
+            <span class="eyebrow coral">GIÁ CỰC HỜI</span>
+            <h2>Ưu đãi đang diễn ra</h2>
+          </div>
+
+          <a href="#menu">Xem tất cả →</a>
+        </div>
+
+        <div id="saleGrid" class="products">
+          <p>Đang tải ưu đãi...</p>
+        </div>
+      </section>
+
+      <section class="section new-products-section" id="new-products">
+        <div class="heading">
+          <div>
+            <span class="eyebrow green">VỪA CÓ TRÊN MENU</span>
+            <h2>Món mới lên kệ</h2>
+          </div>
+          <a href="#menu">Khám phá thực đơn →</a>
+        </div>
+        <div id="newGrid" class="products"><p>Đang tìm món mới...</p></div>
+      </section>
+
+      <section class="section" id="menu">
+        <div class="heading">
+          <div>
+            <span class="eyebrow green"> THỰC ĐƠN ĐƯỢC YÊU THÍCH </span>
+            <h2>Món nổi bật hôm nay</h2>
+          </div>
+
+          <a href="#menu">Xem tất cả →</a>
+        </div>
+
+        <div id="featuredGrid" class="products">
+          <p>Đang tải thực đơn...</p>
+        </div>
+      </section>
+
+      <section class="section" id="combos">
+        <div class="heading">
+          <div>
+            <span class="eyebrow yellow"> 🎃 HALLOWEEN · COMBO GIỚI HẠN </span>
+            <h2>Combo Halloween siêu vui</h2>
+          </div>
+        </div>
+
+        <div id="comboGrid" class="combos">
+          <p>Đang tải combo...</p>
+        </div>
+      </section>
+    </main>
+
+    <section class="section location-section" id="locations">
+      <div class="heading">
+        <div>
+          <span class="eyebrow green">GHÉ THĂM BEO BEO</span>
+          <h2>Tìm cửa hàng gần bạn</h2>
+        </div>
+        <a
+          target="_blank"
+          rel="noopener"
+          href="https://maps.google.com/?q=Ho+Chi+Minh+City"
+          >Mở Google Maps ↗</a
+        >
+      </div>
+      <div class="map-frame">
+        <iframe
+          title="Bản đồ khu vực phục vụ beobeo tại Thành phố Hồ Chí Minh"
+          src="https://maps.google.com/maps?q=Ho%20Chi%20Minh%20City&t=&z=12&ie=UTF8&iwloc=&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <div class="map-note">
+          <span>📍</span>
+          <div>
+            <b>beobeo — Thành phố Hồ Chí Minh</b
+            ><small>Giao hàng trong bán kính 5 km · 09:00 – 22:00</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section stories-section" id="stories">
+      <div class="heading">
+        <div>
+          <span class="eyebrow yellow">TIN TỨC BEO BEO</span>
+          <h2>Tin tức & chương trình sắp tới</h2>
+        </div>
+      </div>
+      <div id="postGrid" class="post-grid"><p>Chưa có bài viết mới.</p></div>
+    </section>
+
+    <footer class="site-footer">
+      <a class="brand" href="#top"><span>b</span> beobeo</a>
+      <p>Món ngon tươi mới, giao đến tận cửa nhà bạn.</p>
+    </footer>
+
+    <aside class="cart" id="cartPanel">
+      <div class="cart-head">
+        <h2>Giỏ hàng của bạn</h2>
+        <button id="closeCart" type="button">×</button>
+      </div>
+
+      <div id="cartItems" class="cart-items"></div>
+
+      <div class="cart-foot">
+        <div>
+          <span>Tạm tính</span>
+          <b id="cartTotal">0₫</b>
+        </div>
+
+        <button class="primary-button" id="checkoutButton">Đặt món ngay</button>
+      </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <dialog id="checkoutDialog" class="checkout-dialog">
+      <button class="dialog-close" type="button" data-close-checkout>×</button>
+      <form id="checkoutForm" class="checkout-form">
+        <span class="eyebrow coral">CHỈ CÒN MỘT BƯỚC</span>
+        <h2>Thông tin giao hàng</h2>
+        <label
+          >Họ và tên<input
+            name="customerName"
+            required
+            maxlength="150"
+            placeholder="Nguyễn Văn A"
+            th:value="${currentUser != null ? currentUser.fullName : ''}"
+        /></label>
+        <label
+          >Số điện thoại<input
+            name="phone"
+            required
+            minlength="9"
+            maxlength="20"
+            pattern="[0-9+() .-]{9,20}"
+            title="Nhập số điện thoại từ 9 đến 20 ký tự."
+            type="tel"
+            placeholder="0900 000 000"
+            th:value="${currentUser != null ? currentUser.phone : ''}"
+        /></label>
+        <label
+          >Địa chỉ nhận hàng<input
+            name="address"
+            required
+            maxlength="500"
+            placeholder="Số nhà, đường, phường..."
+            autocomplete="street-address"
+            th:value="${currentUser != null ? currentUser.address : ''}"
+        /></label>
+        <label
+          >Thanh toán<select name="paymentMethod">
+            <option value="CASH">Tiền mặt khi nhận hàng</option>
+            <option value="WALLET">Ví thành viên</option>
+            <option value="VNPAY">VNPay — ATM / QR</option>
+            <option value="ZALOPAY">ZaloPay — ví / QR</option>
+            <option value="MOMO">MoMo — ví / QR</option>
+          </select></label
+        >
+        <small id="walletCheckoutBalance" class="wallet-checkout-balance"></small>
+        <div class="checkout-summary">
+          Tổng cộng <b id="checkoutTotal">0₫</b>
+        </div>
+        <button class="primary-button" type="submit">Xác nhận đặt hàng</button>
+      </form>
+    </dialog>
+
+    <dialog id="productDialog">
+      <button
+        class="dialog-close"
+        type="button"
+        aria-label="Đóng chi tiết sản phẩm"
+      >
+        ×
+      </button>
+      <div id="dialogContent"></div>
+    </dialog>
+
+    <div id="toast"></div>
+
+    <script th:src="@{/js/store.js}" defer></script>
+    <aside class="contact-floats" aria-label="Liên hệ với cửa hàng">
+      <a
+        class="contact-float messenger"
+        href="https://m.me/khanh.hoa.703089"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Nhắn tin qua Messenger"
+        title="Messenger"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M12 2C6.48 2 2 6.15 2 11.27c0 2.92 1.47 5.52 3.78 7.22V22l3.45-1.9c.88.24 1.81.37 2.77.37 5.52 0 10-4.15 10-9.27S17.52 2 12 2Zm1.08 12.48-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82Z"
+          />
+        </svg>
+      </a>
+      <a
+        class="contact-float zalo"
+        href="https://zalo.me/0398716527"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Liên hệ qua Zalo"
+        title="Zalo"
+      >
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="12" fill="currentColor" />
+          <path d="M9 11h22v4L17 27h14v4H9v-4l14-12H9z" fill="#0878ff" />
+          <text
+            x="20"
+            y="24"
+            text-anchor="middle"
+            font-family="Arial,sans-serif"
+            font-size="11"
+            font-weight="700"
+            fill="white"
+          >
+            Z
+          </text>
+        </svg>
+      </a>
+    </aside>
+  </body>
+</html>

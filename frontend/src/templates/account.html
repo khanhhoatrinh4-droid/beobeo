@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tài khoản của tôi — beobeo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/store.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}" />
+  </head>
+  <body class="account-page">
+    <header class="site-header account-header">
+      <a class="brand" href="/"><span>b</span> beobeo</a
+      ><a class="account-home" href="/">← Về cửa hàng</a>
+    </header>
+    <main
+      class="account-shell"
+      th:attr="data-current-name=${currentUser.fullName},data-current-email=${currentUser.email},data-current-phone=${currentUser.phone},data-current-address=${currentUser.address},data-current-username=${currentUser.username}"
+    >
+      <div class="account-heading">
+        <div>
+          <span class="eyebrow">GÓC THÀNH VIÊN</span>
+          <h1>Tài khoản của tôi</h1>
+          <p>Thông tin cá nhân và tất cả đơn hàng của bạn.</p>
+        </div>
+        <span class="account-badge">✦ Thành viên beobeo</span>
+      </div>
+      <div class="account-layout">
+        <section class="account-card profile-card">
+          <div class="account-card-title">
+            <span class="profile-icon">☺</span>
+            <div>
+              <h2>Thông tin cá nhân</h2>
+              <p>Cập nhật thông tin nhận hàng của bạn</p>
+            </div>
+          </div>
+          <form id="profileForm" class="profile-form">
+            <label
+              >Họ và tên<input
+                name="fullName"
+                required
+                maxlength="150" /></label
+            ><label>Tên đăng nhập<input id="profileUsername" disabled /></label
+            ><label
+              >Email<input name="email" type="email" maxlength="150" /></label
+            ><label
+              >Số điện thoại<input
+                name="phone"
+                type="tel"
+                maxlength="30" /></label
+            ><label class="full-field"
+              >Địa chỉ mặc định<textarea
+                name="address"
+                rows="3"
+                maxlength="500"
+              ></textarea></label
+            ><button class="primary-button" type="submit">Lưu thông tin</button>
+          </form>
+        </section>
+        <section class="account-card wallet-card">
+          <div class="account-card-title">
+            <span class="wallet-icon">₫</span>
+            <div>
+              <h2>Ví thành viên</h2>
+              <p>Số dư chỉ tăng sau khi VNPay xác nhận giao dịch</p>
+            </div>
+          </div>
+          <div class="wallet-balance">
+            <small>Số dư hiện tại</small
+            ><strong id="walletBalance">Đang tải…</strong>
+          </div>
+          <form id="walletTopupForm" class="wallet-form">
+            <label for="topupAmount">Số tiền muốn nạp</label>
+            <div>
+              <input
+                id="topupAmount"
+                name="amount"
+                type="number"
+                min="10000"
+                max="50000000"
+                step="10000"
+                value="50000"
+                required
+              /><button class="primary-button" type="submit">
+                Nạp qua VNPay
+              </button>
+            </div>
+            <small
+              >Nạp từ 10.000 đến 50.000.000 ₫, theo bội số 10.000 ₫. Đây là số
+              dư thử nghiệm trong môi trường VNPay Sandbox.</small
+            >
+          </form>
+          <h3 class="wallet-history-title">Lịch sử nạp gần đây</h3>
+          <div id="walletHistory" class="wallet-history">
+            <div class="orders-loading">Đang tải giao dịch…</div>
+          </div>
+        </section>
+        <section class="account-card orders-card">
+          <div class="account-card-title">
+            <span class="orders-icon">▤</span>
+            <div>
+              <h2>Đơn hàng của tôi</h2>
+              <p id="orderSummary">Đang tải lịch sử đặt hàng…</p>
+            </div>
+            <button
+              id="refreshOrders"
+              class="refresh-orders"
+              type="button"
+              aria-label="Tải lại đơn hàng"
+            >
+              ↻
+            </button>
+          </div>
+          <div id="customerOrders" class="customer-orders">
+            <div class="orders-loading">Đang tải đơn hàng…</div>
+          </div>
+          <div class="order-pagination" id="orderPagination" hidden>
+            <button id="previousOrders" type="button">← Trang trước</button>
+            <span id="orderPageInfo"></span>
+            <button id="nextOrders" type="button">Trang sau →</button>
+          </div>
+        </section>
+      </div>
+      <section class="account-card favorite-card">
+        <div class="account-card-title">
+          <span class="favorite-icon">♥</span>
+          <div>
+            <h2>Sản phẩm yêu thích</h2>
+            <p>Các món bạn đã lưu bằng nút tim trên thực đơn</p>
+          </div>
+          <button
+            id="refreshFavorites"
+            class="refresh-orders"
+            type="button"
+            aria-label="Tải lại sản phẩm yêu thích"
+          >
+            ↻
+          </button>
+        </div>
+        <div id="favoriteProducts" class="favorite-products">
+          <div class="orders-loading">Đang tải sản phẩm yêu thích…</div>
+        </div>
+      </section>
+    </main>
+    <div id="accountToast" role="status"></div>
+    <script th:src="@{/js/account.js}" defer></script>
+  </body>
+</html>
