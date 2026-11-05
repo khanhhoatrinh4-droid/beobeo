@@ -1,6 +1,11 @@
 package com.fastfood.management;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import com.fastfood.management.entity.User;
+import com.fastfood.management.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +19,15 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -29,6 +37,93 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdminAuthenticationTests {
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private UserRepository users;
+
+    @Autowired
+    private PasswordEncoder passwords;
+
+    @BeforeEach
+    void accounts() {
+        for (String role : List.of("CUSTOMER", "ADMIN")) {
+            User user = new User();
+            user.setUsername(role.toLowerCase());
+            user.setRole(role);
+            user.setActive(true);
+            user.setPassword(passwords.encode("test-password"));
+            when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        }
+    }
+
+    @Test
+    void realLoginsKeepBothIdentitiesAndLogoutIndependently() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        login(session, "/login", "customer", "/");
+        assertIdentity(session, HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, "customer");
+        mockMvc.perform(get("/admin").session(session))
+                .andExpect(redirectedUrl("/admin/login?required"));
+
+        login(session, "/admin/login", "admin", "/admin/dashboard");
+        assertIdentity(session, "ADMIN_SECURITY_CONTEXT", "admin");
+        assertIdentity(session, HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, "customer");
+        mockMvc.perform(get("/admin").session(session))
+                .andExpect(redirectedUrl("/admin/dashboard"));
+
+        submit(session, "/admin/dashboard", "/admin/logout")
+                .andExpect(redirectedUrl("/admin/login?logout"));
+        assertNull(session.getAttribute("ADMIN_SECURITY_CONTEXT"));
+        assertIdentity(session, HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, "customer");
+
+        login(session, "/admin/login", "admin", "/admin/dashboard");
+        submit(session, "/login", "/logout").andExpect(redirectedUrl("/?logout"));
+        assertNull(session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY));
+        assertIdentity(session, "ADMIN_SECURITY_CONTEXT", "admin");
+        mockMvc.perform(get("/admin/dashboard").session(session)).andExpect(status().isOk());
+    }
+
+    @Test
+    void customerCredentialsCannotAuthenticateAsAdmin() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        login(session, "/login", "customer", "/");
+        login(session, "/admin/login", "customer", "/admin/login?error");
+        assertNull(session.getAttribute("ADMIN_SECURITY_CONTEXT"));
+        assertIdentity(session, HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, "customer");
+        mockMvc.perform(get("/api/admin/stats").session(session)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void storefrontLoginWithAdminAccountDoesNotGrantAdminSession() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        mockMvc.perform(get("/admin").session(session)).andExpect(redirectedUrl("/admin/login?required"));
+        login(session, "/login", "admin", "/");
+        assertNull(session.getAttribute("ADMIN_SECURITY_CONTEXT"));
+        mockMvc.perform(get("/admin").session(session)).andExpect(redirectedUrl("/admin/login?required"));
+    }
+
+    private void login(MockHttpSession session, String path, String username, String destination) throws Exception {
+        var page = mockMvc.perform(get(path).session(session)).andExpect(status().isOk()).andReturn();
+        CsrfToken csrf = (CsrfToken) page.getRequest().getAttribute("_csrf");
+        mockMvc.perform(post(path).session(session)
+                        .cookie(page.getResponse().getCookie("XSRF-TOKEN"))
+                        .param(csrf.getParameterName(), csrf.getToken())
+                        .param("username", username).param("password", "test-password"))
+                .andExpect(redirectedUrl(destination));
+    }
+
+    private org.springframework.test.web.servlet.ResultActions submit(
+            MockHttpSession session, String pagePath, String action) throws Exception {
+        var page = mockMvc.perform(get(pagePath).session(session)).andReturn();
+        CsrfToken csrf = (CsrfToken) page.getRequest().getAttribute("_csrf");
+        return mockMvc.perform(post(action).session(session)
+                .cookie(page.getResponse().getCookie("XSRF-TOKEN"))
+                .param(csrf.getParameterName(), csrf.getToken()));
+    }
+
+    private void assertIdentity(MockHttpSession session, String key, String username) {
+        SecurityContext context = (SecurityContext) session.getAttribute(key);
+        assertEquals(username, context.getAuthentication().getName());
+    }
 
     @Test
     void customerSessionIsRedirectedToAdminLogin() throws Exception {

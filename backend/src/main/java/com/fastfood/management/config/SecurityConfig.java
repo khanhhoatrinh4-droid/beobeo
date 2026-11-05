@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -81,6 +82,7 @@ public class SecurityConfig {
         http.securityMatcher(adminRequestMatcher())
                 .authenticationManager(adminAuthenticationManager)
                 .securityContext(context -> context.securityContextRepository(adminSecurityContextRepository))
+                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/login").permitAll()
                         .anyRequest().hasRole("ADMIN"))
@@ -108,34 +110,24 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-        SecurityFilterChain securityFilterChain(
-                        HttpSecurity http,
-                        @Qualifier("userAuthenticationManager") AuthenticationManager userAuthenticationManager)
-                        throws Exception {
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            @Qualifier("userAuthenticationManager") AuthenticationManager userAuthenticationManager)
+            throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/css/**", "/js/**", "/images/**", "/auth/**", "/login", "/register",
                                 "/access-denied", "/error", "/payment/vnpay/return", "/payment/momo/return",
                                 "/payment/momo/ipn", "/payment/zalopay/return", "/payment/zalopay/callback")
                         .permitAll()
-                        .requestMatchers("/admin", "/api/admin/**", "/api/products/admin/**").hasRole("ADMIN")
                         .requestMatchers("/account").hasRole("CUSTOMER")
-                                                .requestMatchers("/account").hasAnyRole("CUSTOMER", "ADMIN")
-                                                .requestMatchers("/account").hasRole("CUSTOMER")
-                        .requestMatchers("/api/categories/admin/**", "/api/posts/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/account/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/posts/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/categories/**", "/api/posts/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**", "/api/posts/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/orders/*/cancel").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.PATCH, "/api/orders/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/orders/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/orders/**", "/checkout/**").authenticated()
                         .anyRequest().permitAll())
                 .authenticationManager(userAuthenticationManager)
+                .securityContext(context -> context.securityContextRepository(
+                        new HttpSessionSecurityContextRepository()))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
