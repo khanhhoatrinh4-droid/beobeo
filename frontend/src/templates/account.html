@@ -18,8 +18,33 @@
   </head>
   <body class="account-page">
     <header class="site-header account-header">
-      <a class="brand" href="/"><span>b</span> beobeo</a
-      ><a class="account-home" href="/">← Về cửa hàng</a>
+      <a class="brand" href="/"><span>b</span> beobeo</a>
+      <div class="account-header-actions">
+        <a class="account-home" href="/">Về cửa hàng</a>
+        <details class="member-dropdown">
+          <summary class="member-trigger" th:title="${currentUser.username}">
+            <span class="member-avatar" th:text="${#strings.substring(currentUser.username, 0, 1).toUpperCase()}">U</span>
+            <span class="member-trigger-name" th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Thành viên</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+          </summary>
+          <div class="member-dropdown-panel">
+            <div class="member-dropdown-heading">
+              <span>TÀI KHOẢN THÀNH VIÊN</span>
+              <strong th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Thành viên</strong>
+            </div>
+            <a class="member-dropdown-item" href="/account">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="6" r="3"/><path d="M4 17a6 6 0 0 1 12 0"/></svg>
+              Trang cá nhân
+            </a>
+            <form method="post" th:action="@{/logout}">
+              <button class="member-dropdown-item member-dropdown-logout" type="submit">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3H4.5a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 4.5 17H8M12 6l4 4-4 4M6.5 10H16"/></svg>
+                Đăng xuất
+              </button>
+            </form>
+          </div>
+        </details>
+      </div>
     </header>
     <main
       class="account-shell"

@@ -415,7 +415,11 @@ document
   ?.addEventListener("change", searchProducts);
 
 function update() {
-  localStorage.setItem("fasty-cart", JSON.stringify(cart));
+  try {
+    localStorage.setItem("fasty-cart", JSON.stringify(cart));
+  } catch (error) {
+    console.warn("Không lưu được giỏ hàng trên thiết bị:", error);
+  }
 
   const countElement = document.querySelector("#cartCount");
   const totalElement = document.querySelector("#cartTotal");
@@ -690,6 +694,8 @@ document
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const button = event.currentTarget.querySelector('[type="submit"]');
+    let orderCreated = false;
+    let createdOrderId = null;
     button.disabled = true;
     button.textContent = "Đang tạo đơn...";
     try {
@@ -714,8 +720,11 @@ document
       const result = await response.json().catch(() => ({}));
       if (!response.ok)
         throw new Error(result.message || "Không thể tạo đơn hàng.");
+      orderCreated = true;
+      createdOrderId = result.id;
       if (result.paymentUrl) {
-        window.location.assign(result.paymentUrl);
+        toast(`Đơn hàng #${result.id} đã được tạo. Đang chuyển đến cổng thanh toán.`);
+        window.setTimeout(() => window.location.assign(result.paymentUrl), 500);
         return;
       }
       cart = [];
@@ -724,7 +733,16 @@ document
       document.querySelector("#checkoutDialog").close();
       toast(`Đặt hàng thành công! Mã đơn #${result.id}`);
     } catch (error) {
-      toast(error.message || "Lỗi kết nối. Vui lòng thử lại.");
+      if (orderCreated) {
+        cart = [];
+        update();
+        event.currentTarget.reset();
+        document.querySelector("#checkoutDialog").close();
+        toast(`Đặt hàng thành công! Mã đơn #${createdOrderId}`);
+        console.error("Đơn đã lưu nhưng có lỗi khi cập nhật giao diện:", error);
+      } else {
+        toast(error.message || "Lỗi kết nối. Vui lòng thử lại.");
+      }
     } finally {
       button.disabled = false;
       button.textContent = "Xác nhận đặt hàng";

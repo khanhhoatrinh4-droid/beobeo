@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Trang cá nhân Admin — beobeo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <a class="brand" href="/admin/dashboard"><span>b</span> beobeo</a>
+        <span class="admin-live"><i></i> ADMIN CONSOLE</span>
+        <div class="admin-header-actions">
+          <a class="admin-home" href="/">Về cửa hàng</a>
+          <details class="admin-account-menu">
+            <summary class="admin-account-trigger" th:title="${adminProfile != null ? adminProfile.username : ''}">
+              <span class="admin-avatar" aria-hidden="true">A</span>
+              <span class="admin-account-name" th:text="${adminProfile != null ? adminProfile.username : 'Admin'}">admin</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+            </summary>
+            <div class="admin-account-dropdown">
+              <div class="admin-dropdown-heading">
+                <span>ĐANG ĐĂNG NHẬP VỚI TƯ CÁCH ADMIN</span>
+                <strong th:text="${adminProfile != null ? adminProfile.username : 'Admin'}">admin</strong>
+              </div>
+              <a class="admin-dropdown-item" href="/admin/profile">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="6" r="3"/><path d="M4 17a6 6 0 0 1 12 0"/></svg>
+                Trang cá nhân
+              </a>
+              <form method="post" th:action="@{/admin/logout}">
+                <button class="admin-dropdown-item admin-dropdown-logout" type="submit">
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3H4.5a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 4.5 17H8M12 6l4 4-4 4M6.5 10H16"/></svg>
+                  Đăng xuất
+                </button>
+              </form>
+            </div>
+          </details>
+        </div>
+      </div>
+    </header>
+    <main class="admin-profile-shell">
+      <div class="admin-profile-heading">
+        <span class="admin-eyebrow">BEOBEO / ACCOUNT</span>
+        <h1>Trang cá nhân</h1>
+        <p>Thông tin tài khoản quản trị đang đăng nhập.</p>
+      </div>
+      <section class="admin-profile-panel" aria-labelledby="profile-title">
+        <h2 id="profile-title">Thông tin tài khoản</h2>
+        <div class="admin-profile-grid" th:if="${adminProfile != null}">
+          <div class="admin-profile-field">
+            <span>Tên đăng nhập</span>
+            <strong th:text="${adminProfile.username}">admin</strong>
+          </div>
+          <div class="admin-profile-field">
+            <span>Họ và tên</span>
+            <strong th:text="${adminProfile.fullName != null ? adminProfile.fullName : 'Chưa cập nhật'}">Quản trị viên</strong>
+          </div>
+          <div class="admin-profile-field">
+            <span>Email</span>
+            <strong th:text="${adminProfile.email != null ? adminProfile.email : 'Chưa cập nhật'}">—</strong>
+          </div>
+          <div class="admin-profile-field">
+            <span>Số điện thoại</span>
+            <strong th:text="${adminProfile.phone != null ? adminProfile.phone : 'Chưa cập nhật'}">—</strong>
+          </div>
+          <div class="admin-profile-field">
+            <span>Địa chỉ</span>
+            <strong th:text="${adminProfile.address != null ? adminProfile.address : 'Chưa cập nhật'}">—</strong>
+          </div>
+          <div class="admin-profile-field">
+            <span>Vai trò</span>
+            <strong th:text="${adminProfile.role}">ADMIN</strong>
+          </div>
+        </div>
+        <p class="admin-profile-note">Thông tin hồ sơ được lấy từ tài khoản quản trị hiện tại.</p>
+      </section>
+    </main>
+  </body>
+</html>

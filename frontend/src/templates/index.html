@@ -45,37 +45,56 @@
           href="/admin"
           >Quản trị</a
         >
-        <div
-          class="member-menu"
-          th:if="${currentUser != null and currentUser.role == 'CUSTOMER'}"
-        >
-          <a class="member-account" href="/account"
-            ><span
-              class="member-avatar"
-              th:text="${#strings.substring(currentUser.fullName, 0, 1)}"
-              >B</span
-            ><span
-              ><small>Xin chào</small
-              ><b th:text="${currentUser.fullName}">Thành viên</b></span
-            ><i>⌄</i></a
-          >
-          <form method="post" th:action="@{/logout}">
-            <button class="member-logout" type="submit">Đăng xuất</button>
-          </form>
-        </div>
-        <div
-          class="member-menu admin-menu"
-          th:if="${currentUser != null and currentUser.role == 'ADMIN'}"
-        >
-          <span class="account-name" th:text="${currentUser.fullName}"
-            >Quản trị viên</span
-          >
-          <form method="post" th:action="@{/logout}">
-            <button class="member-logout" type="submit">Đăng xuất</button>
-          </form>
-        </div>
-        <button class="cart-button" id="cartButton" type="button">
-          Giỏ hàng <b id="cartCount">0</b>
+        <details class="member-dropdown" th:if="${currentUser != null and currentUser.role == 'CUSTOMER'}">
+          <summary class="member-trigger" th:title="${currentUser.username}">
+            <span class="member-avatar" th:text="${#strings.substring(currentUser.username, 0, 1).toUpperCase()}">U</span>
+            <span class="member-trigger-name" th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Thành viên</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+          </summary>
+          <div class="member-dropdown-panel">
+            <div class="member-dropdown-heading">
+              <span>TÀI KHOẢN THÀNH VIÊN</span>
+              <strong th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Thành viên</strong>
+            </div>
+            <a class="member-dropdown-item" href="/account">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="6" r="3"/><path d="M4 17a6 6 0 0 1 12 0"/></svg>
+              Trang cá nhân
+            </a>
+            <form method="post" th:action="@{/logout}">
+              <button class="member-dropdown-item member-dropdown-logout" type="submit">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3H4.5a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 4.5 17H8M12 6l4 4-4 4M6.5 10H16"/></svg>
+                Đăng xuất
+              </button>
+            </form>
+          </div>
+        </details>
+        <details class="member-dropdown" th:if="${currentUser != null and currentUser.role == 'ADMIN'}">
+          <summary class="member-trigger" th:title="${currentUser.username}">
+            <span class="member-avatar" th:text="${#strings.substring(currentUser.username, 0, 1).toUpperCase()}">A</span>
+            <span class="member-trigger-name" th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Admin</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+          </summary>
+          <div class="member-dropdown-panel">
+            <div class="member-dropdown-heading">
+              <span>ĐANG ĐĂNG NHẬP VỚI TƯ CÁCH ADMIN</span>
+              <strong th:text="${currentUser.username}">admin</strong>
+            </div>
+            <a class="member-dropdown-item" href="/admin">Quản trị</a>
+            <a class="member-dropdown-item" href="/admin/profile">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="6" r="3"/><path d="M4 17a6 6 0 0 1 12 0"/></svg>
+              Trang cá nhân
+            </a>
+            <form method="post" th:action="@{/admin/logout}">
+              <button class="member-dropdown-item member-dropdown-logout" type="submit">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3H4.5a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 4.5 17H8M12 6l4 4-4 4M6.5 10H16"/></svg>
+                Đăng xuất
+              </button>
+            </form>
+          </div>
+        </details>
+        <button class="cart-button" id="cartButton" type="button" aria-label="Mở giỏ hàng" title="Giỏ hàng">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l2.1 10.1a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 1.9-1.4L21 9H7"/><path d="M10 10v4M14 10v4M18 10v4"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+          <b id="cartCount" aria-live="polite">0</b>
         </button>
       </div>
     </header>

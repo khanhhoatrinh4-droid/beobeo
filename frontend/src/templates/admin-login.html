@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Đăng nhập Admin — beobeo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/components.css}" />
+    <link rel="stylesheet" th:href="@{/css/auth.css}" />
+    <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}" />
+  </head>
+  <body class="auth-page">
+    <a class="brand auth-brand" href="/"><span>b</span> beobeo</a>
+    <main class="auth-card">
+      <span class="eyebrow coral">KHU VỰC QUẢN TRỊ</span>
+      <h1>Đăng nhập Admin</h1>
+      <p>Đăng nhập bằng tài khoản quản trị để tiếp tục.</p>
+      <div class="auth-success" th:if="${loggedOut}">Đã đăng xuất Admin. Tài khoản cửa hàng vẫn được giữ đăng nhập.</div>
+      <div class="auth-error" th:if="${error}" th:text="${error}"></div>
+      <form method="post" th:action="@{/admin/login}" class="auth-form">
+        <label
+          >Tên đăng nhập<input
+            name="username"
+            required
+            autocomplete="username"
+            autofocus /></label
+        ><label
+          >Mật khẩu<input
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password" /></label
+        ><button class="primary-button" type="submit">Đăng nhập Admin</button>
+      </form>
+      <a class="auth-back" href="/">← Quay lại cửa hàng</a>
+    </main>
+  </body>
+</html>
