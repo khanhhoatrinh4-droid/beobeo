@@ -18,79 +18,109 @@
   </head>
   <body class="admin-body">
     <header class="admin-header">
-      <a class="brand" href="/"><span>b</span> beobeo</a>
-      <div>
-        <span class="admin-live"><i></i> Hệ thống quản lý</span
-        ><a class="admin-home" href="/">← Về cửa hàng</a>
+      <div class="admin-header-inner">
+        <a class="brand" href="/"><span>b</span> beobeo</a>
+        <span class="admin-live"><i></i> ADMIN CONSOLE</span>
+        <div class="admin-header-actions">
+          <a class="admin-home" href="/">Về cửa hàng</a>
+          <details class="admin-account-menu">
+            <summary class="admin-account-trigger" th:title="${adminUsername}">
+              <span class="admin-avatar" aria-hidden="true">A</span>
+              <span class="admin-account-name" th:text="${adminUsername}">admin</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+            </summary>
+            <div class="admin-account-dropdown">
+              <div class="admin-dropdown-heading">
+                <span>ĐANG ĐĂNG NHẬP VỚI TƯ CÁCH ADMIN</span>
+                <strong th:text="${adminUsername}">admin</strong>
+              </div>
+              <a class="admin-dropdown-item" href="/admin/profile">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="6" r="3"/><path d="M4 17a6 6 0 0 1 12 0"/></svg>
+                Trang cá nhân
+              </a>
+              <form method="post" th:action="@{/admin/logout}">
+                <button class="admin-dropdown-item admin-dropdown-logout" type="submit">
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3H4.5a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 4.5 17H8M12 6l4 4-4 4M6.5 10H16"/></svg>
+                  Đăng xuất
+                </button>
+              </form>
+            </div>
+          </details>
+        </div>
       </div>
     </header>
-    <main class="admin-shell">
-      <div class="admin-welcome">
-        <div>
-          <span class="eyebrow coral">beobeo CONTROL CENTER</span>
-          <h1>Xin chào, quản lý 👋</h1>
-          <p>Theo dõi cửa hàng và cập nhật hoạt động hôm nay.</p>
-        </div>
-        <span class="admin-date" id="adminDate"></span>
-      </div>
-      <div class="stat-grid">
-        <article class="stat-card">
-          <span>🍔</span><small>Sản phẩm</small
-          ><strong id="statProducts">—</strong><em>Trong thực đơn</em>
-        </article>
-        <article class="stat-card">
-          <span>🧾</span><small>Đơn hàng</small
-          ><strong id="statOrders">—</strong><em>Tổng đơn đã nhận</em>
-        </article>
-        <article class="stat-card">
-          <span>👥</span><small>Người dùng</small
-          ><strong id="statUsers">—</strong><em>Tài khoản khách hàng</em>
-        </article>
-        <article class="stat-card warm">
-          <span>✨</span><small>Điều hành</small><strong>beobeo</strong
-          ><em>Đồ ăn ngon, giao tận nơi</em>
-        </article>
-      </div>
-      <section class="admin-panel">
-        <div class="admin-tabs" role="tablist">
-          <button class="admin-tab active" data-tab="products">
-            🍔 Sản phẩm</button
-          ><button class="admin-tab" data-tab="categories">🗂️ Danh mục</button
-          ><button class="admin-tab" data-tab="posts">📰 Bài viết</button
-          ><button class="admin-tab" data-tab="orders">🧾 Đơn hàng</button
-          ><button class="admin-tab" data-tab="users">👥 Người dùng</button>
-        </div>
-        <div class="admin-toolbar">
-          <div>
-            <h2 id="adminTitle">Quản lý sản phẩm</h2>
-            <p id="adminHint">Thêm món mới hoặc cập nhật thực đơn beobeo.</p>
-          </div>
-          <button id="newRecord" class="primary-button">
-            ＋ Thêm sản phẩm
+    <main class="admin-layout">
+      <aside class="admin-sidebar" aria-label="Điều hướng quản trị">
+        <span class="admin-side-label">WORKSPACE</span>
+        <nav class="admin-tabs" role="tablist" aria-label="Khu vực quản lý">
+          <button class="admin-tab active" id="tab-products" role="tab" aria-selected="true" data-tab="products" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+            <span>Sản phẩm</span>
           </button>
+          <button class="admin-tab" id="tab-categories" role="tab" aria-selected="false" data-tab="categories" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="10" cy="19" r="1.5"/></svg>
+            <span>Danh mục</span>
+          </button>
+          <button class="admin-tab" id="tab-posts" role="tab" aria-selected="false" data-tab="posts" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.75h7l4 4V20a.25.25 0 0 1-.25.25h-10.5A.25.25 0 0 1 7 20V4a.25.25 0 0 1 .25-.25Z"/><path d="M14 4v4h4M10 12h5M10 16h5"/></svg>
+            <span>Bài viết</span>
+          </button>
+          <button class="admin-tab" id="tab-orders" role="tab" aria-selected="false" data-tab="orders" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.75h12A1.25 1.25 0 0 1 19.25 6v14L16 18l-4 2-4-2-3.25 2V6A1.25 1.25 0 0 1 6 4.75Z"/><path d="M9 9h6M9 13h6"/></svg>
+            <span>Đơn hàng</span>
+          </button>
+          <button class="admin-tab" id="tab-users" role="tab" aria-selected="false" data-tab="users" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.75 19a5.25 5.25 0 0 1 10.5 0M16 5.5a3 3 0 0 1 0 5.75M17 14a4.5 4.5 0 0 1 3.25 4.3"/></svg>
+            <span>Người dùng</span>
+          </button>
+        </nav>
+        <div class="admin-sidebar-footer">
+          <span class="admin-sidebar-indicator"></span>
+          <div><b>Phiên quản trị</b><small>Đang hoạt động</small></div>
         </div>
-        <div class="admin-filters">
-          <label class="search-field"
-            ><span>⌕</span
-            ><input
-              id="adminSearch"
-              type="search"
-              placeholder="Tìm trong danh sách..." /></label
-          ><select id="adminFilter" aria-label="Lọc dữ liệu">
-            <option value="">Tất cả</option>
-          </select>
-        </div>
-        <div class="admin-table-wrap">
-          <table>
-            <thead id="tableHead"></thead>
-            <tbody id="tableBody">
-              <tr>
-                <td>Đang tải dữ liệu...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      </aside>
+      <div class="admin-main">
+        <section class="admin-welcome">
+          <div>
+            <span class="admin-eyebrow">BEOBEO / OPERATIONS</span>
+            <h1>Quản lý cửa hàng</h1>
+            <p>Theo dõi dữ liệu và cập nhật hoạt động kinh doanh.</p>
+          </div>
+          <div class="admin-date-block"><span>HÔM NAY</span><time class="admin-date" id="adminDate"></time></div>
+        </section>
+        <section class="stat-grid" aria-label="Chỉ số vận hành">
+          <article class="stat-card"><small>SẢN PHẨM</small><strong id="statProducts">—</strong><em>Đang có trong thực đơn</em></article>
+          <article class="stat-card"><small>ĐƠN HÀNG</small><strong id="statOrders">—</strong><em>Tổng đơn đã tiếp nhận</em></article>
+          <article class="stat-card"><small>NGƯỜI DÙNG</small><strong id="statUsers">—</strong><em>Tài khoản khách hàng</em></article>
+          <article class="stat-card stat-card-status"><small>TRẠNG THÁI HỆ THỐNG</small><strong>Hoạt động</strong><em>Trang quản trị trực tuyến</em></article>
+        </section>
+        <section class="admin-panel" id="admin-panel" role="tabpanel" aria-labelledby="tab-products">
+          <div class="admin-toolbar">
+            <div>
+              <span class="admin-section-label">DANH SÁCH QUẢN LÝ</span>
+              <h2 id="adminTitle">Quản lý sản phẩm</h2>
+              <p id="adminHint">Thực đơn, giá bán và trạng thái kinh doanh.</p>
+            </div>
+            <button id="newRecord" class="primary-button" type="button">+ Thêm sản phẩm</button>
+          </div>
+          <div class="admin-filters">
+            <label class="search-field">
+              <span class="search-label">Tìm kiếm</span>
+              <input id="adminSearch" type="search" placeholder="Tìm trong danh sách..." />
+            </label>
+            <label class="filter-field">
+              <span class="search-label">Lọc theo</span>
+              <select id="adminFilter" aria-label="Lọc dữ liệu"><option value="">Tất cả</option></select>
+            </label>
+          </div>
+          <div class="admin-table-wrap">
+            <table>
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"><tr><td>Đang tải dữ liệu...</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </main>
     <dialog id="productFormDialog" class="admin-dialog">
       <button class="dialog-close" type="button" data-admin-close="product">

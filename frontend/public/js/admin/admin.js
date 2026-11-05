@@ -404,8 +404,12 @@ function objectFromForm(form, numeric = []) {
 
 document.querySelectorAll(".admin-tab").forEach((button) =>
   button.addEventListener("click", () => {
-    document.querySelector(".admin-tab.active").classList.remove("active");
+    const activeTab = document.querySelector(".admin-tab.active");
+    activeTab.classList.remove("active");
+    activeTab.setAttribute("aria-selected", "false");
     button.classList.add("active");
+    button.setAttribute("aria-selected", "true");
+    document.querySelector("#admin-panel").setAttribute("aria-labelledby", button.id);
     state.tab = button.dataset.tab;
     render();
   }),
