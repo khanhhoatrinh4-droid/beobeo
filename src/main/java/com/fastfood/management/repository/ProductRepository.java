@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByActiveTrue();
+    List<Product> findByActiveTrueAndFeaturedTrue();
+    List<Product> findByActiveTrueAndComboProductTrue();
+    List<Product> findByActiveTrueAndDiscountPercentGreaterThan(Integer discountPercent);
     List<Product> findByNameContainingIgnoreCase(String keyword);
 }

@@ -16,7 +16,14 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(150) NOT NULL,
     description VARCHAR(500),
     price DECIMAL(12,2) NOT NULL,
+    original_price DECIMAL(12,2),
+    discount_percent INT NOT NULL DEFAULT 0,
+    featured BOOLEAN NOT NULL DEFAULT FALSE,
+    combo_product BOOLEAN NOT NULL DEFAULT FALSE,
     image_url VARCHAR(500),
+    preparation_minutes INT NOT NULL DEFAULT 15,
+    calories INT,
+    ingredients VARCHAR(1000),
     active BOOLEAN NOT NULL DEFAULT TRUE,
     category_id BIGINT,
     CONSTRAINT fk_product_category
@@ -29,6 +36,8 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(150),
     email VARCHAR(150),
+    phone VARCHAR(30),
+    address VARCHAR(500),
     role VARCHAR(30) NOT NULL DEFAULT 'CUSTOMER',
     active BOOLEAN NOT NULL DEFAULT TRUE
 );
@@ -41,6 +50,10 @@ CREATE TABLE IF NOT EXISTS orders (
     total_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
     payment_method VARCHAR(30) NOT NULL DEFAULT 'CASH',
     shipping_address VARCHAR(500),
+    customer_name VARCHAR(150),
+    customer_phone VARCHAR(30),
+    payment_reference VARCHAR(80) UNIQUE,
+    paid BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_order_customer
         FOREIGN KEY (customer_id) REFERENCES users(id)
 );
