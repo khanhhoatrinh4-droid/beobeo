@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.savedrequest.NullRequestCache;
@@ -76,6 +78,7 @@ public class SecurityConfig {
     @Order(1)
     SecurityFilterChain adminSecurityFilterChain(
             HttpSecurity http,
+            UserRepository users,
             @Qualifier("adminAuthenticationManager") AuthenticationManager adminAuthenticationManager,
             @Qualifier("adminSecurityContextRepository") SecurityContextRepository adminSecurityContextRepository)
             throws Exception {
@@ -91,7 +94,9 @@ public class SecurityConfig {
                         .loginProcessingUrl("/admin/login")
                         .usernameParameter("username").passwordParameter("password")
                         .defaultSuccessUrl("/admin/dashboard", true)
-                        .failureUrl("/admin/login?error"))
+                        .failureHandler((request, response, exception) -> response.sendRedirect(
+                                request.getContextPath() + (exception instanceof DisabledException
+                                        ? "/admin/login?inactive=true" : "/admin/login?error"))))
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")
                         .logoutSuccessUrl("/admin/login?logout")
@@ -105,6 +110,8 @@ public class SecurityConfig {
                 }).accessDeniedHandler((request, response, exception) -> response.sendRedirect("/access-denied")))
                 .csrf(csrf -> csrf.csrfTokenRepository(
                         org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        http.addFilterBefore(new ActiveAccountFilter(users, adminSecurityContextRepository, "/admin/login"),
+                AuthorizationFilter.class);
         return http.build();
     }
 
@@ -112,8 +119,10 @@ public class SecurityConfig {
     @Order(2)
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
+            UserRepository users,
             @Qualifier("userAuthenticationManager") AuthenticationManager userAuthenticationManager)
             throws Exception {
+        var customerContexts = new HttpSessionSecurityContextRepository();
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/css/**", "/js/**", "/images/**", "/auth/**", "/login", "/register",
@@ -126,13 +135,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/orders/**", "/checkout/**").authenticated()
                         .anyRequest().permitAll())
                 .authenticationManager(userAuthenticationManager)
-                .securityContext(context -> context.securityContextRepository(
-                        new HttpSessionSecurityContextRepository()))
+                .securityContext(context -> context.securityContextRepository(customerContexts))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("username").passwordParameter("password")
-                        .defaultSuccessUrl("/", false).failureUrl("/login?error"))
+                        .defaultSuccessUrl("/", false)
+                        .failureHandler((request, response, exception) -> response.sendRedirect(
+                                request.getContextPath() + (exception instanceof DisabledException
+                                        ? "/login?inactive=true" : "/login?error"))))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/?logout")
@@ -146,6 +157,7 @@ public class SecurityConfig {
                 }).accessDeniedHandler((request, response, exception) -> response.sendRedirect("/access-denied")))
                 .csrf(csrf -> csrf.csrfTokenRepository(
                         org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        http.addFilterBefore(new ActiveAccountFilter(users, customerContexts, "/login"), AuthorizationFilter.class);
         return http.build();
     }
 

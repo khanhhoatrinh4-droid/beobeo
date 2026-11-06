@@ -9,3 +9,5 @@ Website bán đồ ăn và quản lý cửa hàng với Java Spring Boot.
 Khởi chạy từ thư mục này: `mvn -f backend/pom.xml spring-boot:run`.
 
 Hướng dẫn đầy đủ: [docs/README.md](docs/README.md).
+
+Cấu trúc frontend và kiểm thử: [frontend/README.md](frontend/README.md).

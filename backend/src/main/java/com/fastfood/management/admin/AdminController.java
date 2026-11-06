@@ -22,8 +22,9 @@ public class AdminController {
     public String login(@RequestParam(required = false) String error,
                         @RequestParam(required = false) String required,
                         @RequestParam(required = false) String logout,
+                        @RequestParam(required = false) String inactive,
                         Model model) {
-        model.addAttribute("error", error != null
+        model.addAttribute("error", inactive != null ? "Tài khoản không hoạt động. Vui lòng liên hệ quản trị viên." : error != null
                 ? "Thông tin đăng nhập quản trị không đúng hoặc tài khoản không có quyền Admin."
                 : required != null ? "Vui lòng đăng nhập Admin để tiếp tục." : null);
         model.addAttribute("loggedOut", logout != null);

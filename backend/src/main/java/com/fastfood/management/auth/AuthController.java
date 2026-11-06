@@ -20,8 +20,10 @@ public class AuthController {
     public AuthController(UserRepository users, PasswordEncoder passwords) { this.users = users; this.passwords = passwords; }
 
     @GetMapping("/login")
-    public String login(@RequestParam(required = false) String error, @RequestParam(required = false) String required, Model model) {
-        model.addAttribute("error", error != null ? "Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản đã khóa." : required != null ? "Vui lòng đăng nhập để tiếp tục." : null);
+    public String login(@RequestParam(required = false) String error, @RequestParam(required = false) String required,
+                        @RequestParam(required = false) String inactive, Model model) {
+        model.addAttribute("error", inactive != null ? "Tài khoản không hoạt động. Vui lòng liên hệ quản trị viên."
+                : error != null ? "Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản đã khóa." : required != null ? "Vui lòng đăng nhập để tiếp tục." : null);
         model.addAttribute("registered", false);
         return "login";
     }

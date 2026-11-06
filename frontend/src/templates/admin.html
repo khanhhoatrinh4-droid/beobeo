@@ -150,11 +150,14 @@
               type="number"
               min="0"
               max="100"
+              value="0"
               name="discountPercent" /></label
           ><label
             >Thời gian chế biến (phút)<input
               type="number"
               min="1"
+              max="240"
+              value="15"
               name="preparationMinutes"
           /></label>
         </div>
@@ -243,6 +246,6 @@
       </form>
     </dialog>
     <div id="toast"></div>
-    <script th:src="@{/js/admin/admin.js}" defer></script>
+    <script type="module" th:src="@{/js/pages/admin.js}"></script>
   </body>
 </html>
