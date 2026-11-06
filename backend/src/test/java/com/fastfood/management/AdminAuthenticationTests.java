@@ -54,6 +54,72 @@ class AdminAuthenticationTests {
             user.setPassword(passwords.encode("test-password"));
             when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
         }
+        User manager = new User();
+        manager.setUsername("manager");
+        manager.setRole("ADMIN");
+        manager.setActive(true);
+        when(users.findByUsername("manager")).thenReturn(Optional.of(manager));
+    }
+
+    @Test
+    void lockingCustomerInAdminBlocksTheirNextRefreshAndKeepsAdminLogin() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        login(session, "/login", "customer", "/");
+        login(session, "/admin/login", "admin", "/admin/dashboard");
+        User customer = users.findByUsername("customer").orElseThrow();
+        var customerId = User.class.getDeclaredField("id");
+        customerId.setAccessible(true);
+        customerId.set(customer, 42L);
+        when(users.findById(42L)).thenReturn(Optional.of(customer));
+        when(users.save(customer)).thenReturn(customer);
+        var page = mockMvc.perform(get("/admin/dashboard").session(session)).andReturn();
+        CsrfToken csrf = (CsrfToken) page.getRequest().getAttribute("_csrf");
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch("/api/admin/users/42/status")
+                        .session(session).cookie(page.getResponse().getCookie("XSRF-TOKEN"))
+                        .param(csrf.getParameterName(), csrf.getToken())
+                        .contentType("application/json").content("{\"active\":false}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/").session(session)).andExpect(redirectedUrl("/login?inactive=true"));
+        assertNull(session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY));
+        assertIdentity(session, "ADMIN_SECURITY_CONTEXT", "admin");
+        mockMvc.perform(get("/login?inactive=true").session(session)).andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Tài khoản không hoạt động")));
+        mockMvc.perform(get("/account").session(session)).andExpect(redirectedUrl("/login?required"));
+        login(session, "/login", "customer", "/login?inactive=true");
+        customer.setActive(true);
+        login(session, "/login", "customer", "http://localhost/account?continue");
+    }
+
+    @Test
+    void lockedCustomerApiIsRejectedAndSessionIsCleared() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        login(session, "/login", "customer", "/");
+        users.findByUsername("customer").orElseThrow().setActive(false);
+        mockMvc.perform(get("/api/account/profile").session(session))
+                .andExpect(status().isForbidden())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.code").value("ACCOUNT_INACTIVE"));
+        assertNull(session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY));
+    }
+
+    @Test
+    void lockedAdminCannotKeepUsingDashboardButCustomerSessionSurvives() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        login(session, "/login", "customer", "/");
+        login(session, "/admin/login", "admin", "/admin/dashboard");
+        users.findByUsername("admin").orElseThrow().setActive(false);
+        mockMvc.perform(get("/admin/dashboard").session(session)).andExpect(redirectedUrl("/admin/login?inactive=true"));
+        assertNull(session.getAttribute("ADMIN_SECURITY_CONTEXT"));
+        assertIdentity(session, HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, "customer");
+        mockMvc.perform(get("/admin/login?inactive=true").session(session)).andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Tài khoản không hoạt động")));
+    }
+
+    @Test
+    void deletedAccountCannotContinueUsingItsSession() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        login(session, "/login", "customer", "/");
+        when(users.findByUsername("customer")).thenReturn(Optional.empty());
+        mockMvc.perform(get("/account").session(session)).andExpect(redirectedUrl("/login?inactive=true"));
     }
 
     @Test

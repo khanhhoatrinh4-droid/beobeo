@@ -1,0 +1,16 @@
+{
+  "name": "beobeo-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "eslint public/js tests",
+    "format": "prettier --write public/js tests eslint.config.js"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "globals": "^16.0.0",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2"
+  }
+}

@@ -18,3 +18,4 @@ Thumbs.db
 .env
 application-local.properties
 **/uploads/
+**/node_modules/

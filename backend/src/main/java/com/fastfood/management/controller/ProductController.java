@@ -123,6 +123,10 @@ public class ProductController {
     }
 
     private void validate(Product product) {
+        if (product != null) {
+            if (product.getDiscountPercent() == null) product.setDiscountPercent(0);
+            if (product.getPreparationMinutes() == null) product.setPreparationMinutes(15);
+        }
         if (product == null || product.getName() == null || product.getName().isBlank() || product.getName().trim().length() > 150
                 || product.getPrice() == null || product.getPrice().signum() <= 0
                 || product.getDescription() != null && product.getDescription().length() > 2000
