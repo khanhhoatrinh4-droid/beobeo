@@ -119,6 +119,7 @@
               <tbody id="tableBody"><tr><td>Đang tải dữ liệu...</td></tr></tbody>
             </table>
           </div>
+          <nav id="productPagination" class="admin-pagination" aria-label="Phân trang sản phẩm" hidden></nav>
         </section>
       </div>
     </main>
@@ -174,7 +175,16 @@
             name="ingredients"
             maxlength="1000"
             placeholder="Bò, cheddar, xà lách" /></label
-        ><label>URL hình ảnh<input name="imageUrl" maxlength="500" /></label>
+        ><label>URL hình ảnh<input name="imageUrl" maxlength="500" id="productImageUrl" /></label>
+        <div class="image-upload" id="productImageUpload" aria-busy="false">
+          <label class="image-drop-zone" id="productImageDropZone" for="productImageFile">
+            <strong>Kéo thả ảnh vào đây hoặc bấm để chọn ảnh</strong>
+            <span>JPG, PNG, GIF · Tối đa 5 MB</span>
+            <input type="file" id="productImageFile" accept="image/jpeg,image/png,image/gif" />
+          </label>
+          <p id="productImageStatus" role="status" aria-live="polite"></p>
+          <img id="productImagePreview" class="image-upload-preview" alt="Ảnh sản phẩm xem trước" hidden />
+        </div>
         <div class="form-row checks">
           <label><input type="checkbox" name="featured" /> Món nổi bật</label
           ><label><input type="checkbox" name="comboProduct" /> Combo</label

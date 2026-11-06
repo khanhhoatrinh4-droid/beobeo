@@ -1,6 +1,7 @@
 const state = {
   tab: "products",
   products: [],
+  productPage: 1,
   categories: [],
   posts: [],
   orders: [],
@@ -86,6 +87,7 @@ const nextStatuses = {
   CANCELLED: [],
 };
 const selected = (actual, expected) => (actual === expected ? "selected" : "");
+const PRODUCTS_PER_PAGE = 8;
 
 async function loadData() {
   const [products, categories, posts, orders, users] = await Promise.all([
@@ -177,6 +179,7 @@ function filterRows(items, textOf, filterOf) {
 function renderRows() {
   const head = document.querySelector("#tableHead"),
     body = document.querySelector("#tableBody");
+  document.querySelector("#productPagination").hidden = state.tab !== "products";
   if (state.tab === "products") {
     head.innerHTML =
       "<tr><th>Sản phẩm</th><th>Danh mục</th><th>Giá bán</th><th>Trạng thái</th><th>Thao tác</th></tr>";
@@ -185,8 +188,13 @@ function renderRows() {
       (p) => `${p.name} ${p.description || ""} ${p.category?.name || ""}`,
       (p) => (p.active ? "active" : "inactive"),
     );
+    const totalPages = Math.max(1, Math.ceil(rows.length / PRODUCTS_PER_PAGE));
+    state.productPage = Math.max(1, Math.min(state.productPage, totalPages));
+    const start = (state.productPage - 1) * PRODUCTS_PER_PAGE;
+    renderProductPagination(rows.length, totalPages, start);
     body.innerHTML =
       rows
+        .slice(start, start + PRODUCTS_PER_PAGE)
         .map(
           (p) =>
             `
@@ -334,6 +342,29 @@ function renderRows() {
 function empty(columns) {
   return `<tr><td colspan="${columns}" class="empty-row">Không tìm thấy dữ liệu phù hợp.</td></tr>`;
 }
+function renderProductPagination(total, totalPages, start) {
+  const pagination = document.querySelector("#productPagination");
+  const firstPage = Math.max(1, Math.min(state.productPage - 2, totalPages - 4));
+  const lastPage = Math.min(totalPages, firstPage + 4);
+  const pages = [];
+  for (let page = firstPage; page <= lastPage; page++) {
+    pages.push(`<button type="button" data-product-page="${page}" aria-label="Trang ${page}" ${page === state.productPage ? 'aria-current="page"' : ""}>${page}</button>`);
+  }
+  pagination.innerHTML = `
+    <span class="pagination-summary" role="status">Hiển thị ${total ? start + 1 : 0}–${Math.min(start + PRODUCTS_PER_PAGE, total)} / ${total} sản phẩm</span>
+    <div class="pagination-controls">
+      <button type="button" data-product-page="${state.productPage - 1}" ${state.productPage === 1 ? "disabled" : ""}>Trước</button>
+      ${pages.join("")}
+      <button type="button" data-product-page="${state.productPage + 1}" ${state.productPage === totalPages ? "disabled" : ""}>Sau</button>
+    </div>`;
+}
+document.querySelector("#productPagination").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-product-page]");
+  if (!button || button.disabled) return;
+  state.productPage = Number(button.dataset.productPage);
+  renderRows();
+  document.querySelector(`[data-product-page="${state.productPage}"][aria-current]`)?.focus();
+});
 function showForm(dialogId, formId, titleId, record, fields, title) {
   const form = document.querySelector(formId);
   form.reset();
@@ -348,6 +379,10 @@ function showForm(dialogId, formId, titleId, record, fields, title) {
   document.querySelector(dialogId).showModal();
 }
 function editProduct(product) {
+  productImageVersion++;
+  setProductImageBusy(false);
+  document.querySelector("#productImageFile").value = "";
+  document.querySelector("#productImageStatus").textContent = "";
   showForm(
     "#productFormDialog",
     "#productForm",
@@ -372,6 +407,7 @@ function editProduct(product) {
     document.querySelector("#productForm").elements[name].checked = Boolean(
       product?.[name],
     );
+  previewProductImage();
 }
 function editCategory(category) {
   showForm(
@@ -402,6 +438,77 @@ function objectFromForm(form, numeric = []) {
   return data;
 }
 
+let productImageVersion = 0;
+let productImageBusy = false;
+const productImageUrl = document.querySelector("#productImageUrl");
+const productImageFile = document.querySelector("#productImageFile");
+const productImageUpload = document.querySelector("#productImageUpload");
+const productImageStatus = document.querySelector("#productImageStatus");
+const productImagePreview = document.querySelector("#productImagePreview");
+
+function previewProductImage() {
+  const url = productImageUrl.value.trim();
+  productImagePreview.hidden = !url;
+  if (url) productImagePreview.src = url;
+  else productImagePreview.removeAttribute("src");
+}
+productImagePreview.addEventListener("error", () => { productImagePreview.hidden = true; });
+function setProductImageBusy(busy) {
+  productImageBusy = busy;
+  productImageUpload.setAttribute("aria-busy", String(busy));
+  productImageFile.disabled = busy;
+  productImageUrl.disabled = busy;
+  document.querySelector('#productForm button[type="submit"]').disabled = busy;
+}
+async function uploadProductImage(files) {
+  if (productImageBusy || !files.length) return;
+  if (files.length !== 1) {
+    productImageStatus.textContent = "Vui lòng chọn một ảnh cho sản phẩm.";
+    return;
+  }
+  const file = files[0];
+  if (!["image/jpeg", "image/png", "image/gif"].includes(file.type) || file.size > 5 * 1024 * 1024 || !file.size) {
+    productImageStatus.textContent = "Vui lòng chọn ảnh JPG, PNG hoặc GIF có dung lượng tối đa 5 MB.";
+    productImageFile.value = "";
+    return;
+  }
+  const version = ++productImageVersion;
+  const body = new FormData();
+  body.append("file", file);
+  setProductImageBusy(true);
+  productImageStatus.textContent = "Đang tải ảnh lên…";
+  try {
+    const result = await api("/api/admin/images", { method: "POST", body });
+    if (version !== productImageVersion) return;
+    productImageUrl.value = result.imageUrl;
+    previewProductImage();
+    productImageStatus.textContent = `Đã tải ảnh ${file.name}. Bấm Lưu sản phẩm để lưu thay đổi.`;
+  } catch (error) {
+    if (version === productImageVersion) productImageStatus.textContent = error.message;
+  } finally {
+    if (version === productImageVersion) {
+      setProductImageBusy(false);
+      productImageFile.value = "";
+    }
+  }
+}
+productImageFile.addEventListener("change", () => uploadProductImage(productImageFile.files));
+productImageUrl.addEventListener("input", previewProductImage);
+for (const target of [productImageUpload, productImageUrl]) {
+  target.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    productImageUpload.classList.add("dragging");
+  });
+  target.addEventListener("dragleave", (event) => {
+    if (!target.contains(event.relatedTarget)) productImageUpload.classList.remove("dragging");
+  });
+  target.addEventListener("drop", (event) => {
+    event.preventDefault();
+    productImageUpload.classList.remove("dragging");
+    uploadProductImage(event.dataTransfer.files);
+  });
+}
+
 document.querySelectorAll(".admin-tab").forEach((button) =>
   button.addEventListener("click", () => {
     const activeTab = document.querySelector(".admin-tab.active");
@@ -411,11 +518,16 @@ document.querySelectorAll(".admin-tab").forEach((button) =>
     button.setAttribute("aria-selected", "true");
     document.querySelector("#admin-panel").setAttribute("aria-labelledby", button.id);
     state.tab = button.dataset.tab;
+    state.productPage = 1;
     render();
   }),
 );
-document.querySelector("#adminSearch").addEventListener("input", renderRows);
-document.querySelector("#adminFilter").addEventListener("change", renderRows);
+function resetProductPage() {
+  state.productPage = 1;
+  renderRows();
+}
+document.querySelector("#adminSearch").addEventListener("input", resetProductPage);
+document.querySelector("#adminFilter").addEventListener("change", resetProductPage);
 document
   .querySelector("#newRecord")
   .addEventListener("click", () =>
@@ -437,6 +549,7 @@ document
   .querySelector("#productForm")
   .addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (productImageBusy) return;
     const form = event.currentTarget,
       id = form.elements.id.value;
     const data = objectFromForm(form, [
