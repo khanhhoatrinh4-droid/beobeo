@@ -128,16 +128,78 @@ button:hover,
   justify-content: space-between;
   gap: 20px;
 }
+.footer-brand-block {
+  flex: 1 1 auto;
+}
 .site-footer p {
   font-size: 13px;
 }
 .site-footer .brand {
   color: white;
 }
-.site-footer > a:last-child {
-  font-size: 13px;
+.footer-contact h2 {
+  margin: 0 0 12px;
   color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.footer-socials {
+  display: grid;
+  grid-template-columns: repeat(5, 48px);
+  gap: 10px;
+}
+.footer-social-link {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d2ded766;
+  border-radius: 50%;
+  color: #fff;
+}
+a.footer-social-link {
   text-decoration: none;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s,
+    transform 0.2s;
+}
+a.footer-social-link:hover {
+  color: #1c3229;
+  border-color: #f46a3b;
+  background: #f46a3b;
+  transform: translateY(-2px);
+}
+a.footer-social-link:focus-visible {
+  outline: 3px solid #f6ae42;
+  outline-offset: 3px;
+}
+.footer-social-link svg {
+  width: 23px;
+  height: 23px;
+}
+@media (max-width: 760px) {
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 32px 22px;
+  }
+  .footer-contact {
+    width: 100%;
+  }
+}
+@media (max-width: 380px) {
+  .footer-socials {
+    grid-template-columns: repeat(5, 42px);
+    gap: 8px;
+  }
+  .footer-social-link {
+    width: 42px;
+    height: 42px;
+  }
 }
 .checkout-dialog,
 .admin-dialog {
