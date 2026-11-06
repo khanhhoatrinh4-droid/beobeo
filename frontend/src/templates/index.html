@@ -390,6 +390,7 @@
       <div id="postGrid" class="post-grid"><p>Chưa có bài viết mới.</p></div>
     </section>
 
+<<<<<<< HEAD
     <footer class="site-footer">
       <div class="footer-brand-block">
         <a class="brand" href="#top"><span>b</span> beobeo</a>
@@ -434,7 +435,58 @@
           </span>
         </div>
       </section>
+=======
+    <footer class="site-footer store-footer" id="contact">
+      <div class="footer-grid">
+        <div class="footer-intro">
+          <a class="brand" href="#top"><span>b</span> beobeo</a>
+          <p>Món ngon tươi mới,<br />giao đến tận cửa nhà bạn.</p>
+          <nav class="footer-socials" aria-label="Kênh liên hệ beobeo">
+            <a class="footer-social facebook" href="https://web.facebook.com/giauten.bankiet.73" target="_blank" rel="noopener noreferrer" aria-label="Theo dõi trên Facebook" data-tooltip="Theo dõi trên Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 22v-9h3l.5-4H14V6.5c0-1.16.32-1.95 2-1.95h1.7V1.1A23 23 0 0 0 15.2 1C12.7 1 11 2.5 11 5.3V9H8v4h3v9z" /></svg>
+            </a>
+            <a class="footer-social" href="tel:0369970349" aria-label="Gọi 0369 970 349" data-tooltip="Gọi 0369 970 349">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 3 3 5-2 2c1.5 3 3 4.5 6 6l2-2 5 3c-1 4-3 5-6 3C8 17 4 13 2 6c-.5-2 2-3 5-3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg>
+            </a>
+            <button class="footer-social" type="button" data-open-zalo aria-label="Xem mã QR liên hệ Zalo" data-tooltip="Kết nối qua Zalo"><span class="zalo-wordmark">Zalo</span></button>
+          </nav>
+        </div>
+        <nav class="footer-links" aria-label="Khám phá cửa hàng">
+          <h2>Khám phá beobeo</h2>
+          <a href="#menu">Thực đơn</a>
+          <a href="#combos">Combo tiết kiệm</a>
+          <a href="#sale">Ưu đãi hôm nay</a>
+          <a href="#stories">Tin tức &amp; chương trình</a>
+          <a href="#locations">Cửa hàng</a>
+        </nav>
+        <div class="footer-links footer-contact">
+          <h2>Liên hệ với chúng mình</h2>
+          <p>Cần hỗ trợ đặt món?<br />beobeo luôn sẵn sàng lắng nghe.</p>
+          <a class="footer-phone" href="tel:0369970349">0369 970 349</a>
+          <a href="https://web.facebook.com/giauten.bankiet.73" target="_blank" rel="noopener noreferrer">Facebook <span aria-hidden="true">↗</span></a>
+          <button class="footer-text-button" type="button" data-open-zalo>Nhắn tin qua Zalo <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="footer-zalo">
+          <h2>Kết nối qua Zalo</h2>
+          <button class="footer-qr" type="button" data-open-zalo aria-label="Phóng to danh thiếp Zalo Mai Văn An">
+            <img th:src="@{/images/zalo-contact-mai-van-an.png}" alt="Danh thiếp Zalo Mai Văn An với mã QR liên hệ" width="984" height="1200" loading="lazy" />
+          </button>
+          <p>Quét mã hoặc bấm để phóng to</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 beobeo. Món ngon, kết nối niềm vui.</p>
+        <a href="#top">Lên đầu trang <span aria-hidden="true">↑</span></a>
+      </div>
+>>>>>>> ec53b6840449a71791e2fca01d03a1780cb01bcf
     </footer>
+
+    <dialog class="zalo-contact-dialog" id="zaloContactDialog" aria-labelledby="zaloContactTitle">
+      <button class="dialog-close" type="button" data-close-zalo aria-label="Đóng danh thiếp Zalo">×</button>
+      <h2 id="zaloContactTitle">Kết nối với beobeo qua Zalo</h2>
+      <p>Quét mã QR trong danh thiếp để liên hệ.</p>
+      <img th:src="@{/images/zalo-contact-mai-van-an.png}" alt="Danh thiếp Zalo Mai Văn An với mã QR liên hệ" width="984" height="1200" />
+    </dialog>
 
     <aside class="cart" id="cartPanel">
       <div class="cart-head">
@@ -524,25 +576,24 @@
     <aside class="contact-floats" aria-label="Liên hệ với cửa hàng">
       <a
         class="contact-float messenger"
-        href="https://m.me/khanh.hoa.703089"
+        href="https://web.facebook.com/giauten.bankiet.73"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Nhắn tin qua Messenger"
-        title="Messenger"
+        aria-label="Liên hệ qua Facebook"
+        title="Facebook"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path
             fill="currentColor"
-            d="M12 2C6.48 2 2 6.15 2 11.27c0 2.92 1.47 5.52 3.78 7.22V22l3.45-1.9c.88.24 1.81.37 2.77.37 5.52 0 10-4.15 10-9.27S17.52 2 12 2Zm1.08 12.48-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82Z"
+            d="M14 22v-9h3l.5-4H14V6.5c0-1.16.32-1.95 2-1.95h1.7V1.1A23 23 0 0 0 15.2 1C12.7 1 11 2.5 11 5.3V9H8v4h3v9z"
           />
         </svg>
       </a>
-      <a
+      <button
         class="contact-float zalo"
-        href="https://zalo.me/0398716527"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Liên hệ qua Zalo"
+        type="button"
+        data-open-zalo
+        aria-label="Xem mã QR liên hệ Zalo"
         title="Zalo"
       >
         <svg viewBox="0 0 40 40" aria-hidden="true">
@@ -560,7 +611,7 @@
             Z
           </text>
         </svg>
-      </a>
+      </button>
     </aside>
   </body>
 </html>
